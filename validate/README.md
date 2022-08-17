@@ -41,15 +41,17 @@ export class Child extends AirEntity {
 @Injected()
 export class ParentDvo extends BaseParentDvo {
 
-    async validateParent(parent: Parent) {
-        await this.validate(parent, {
+    myParentValidator = this.validator(parent => ({
             value: oneOf('Great Parent', 'Best Parent'),
             children: or(
                 exists(),
                 {
                     value: length(3, 50)
                 })
-        })
+        }))
+
+    async validateParent(parent: Parent) {
+        await this.validate(parent, this.myParentValidator)
     }
 
 }
