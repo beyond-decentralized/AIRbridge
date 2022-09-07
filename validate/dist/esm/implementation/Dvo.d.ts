@@ -1,4 +1,4 @@
-import { QApplication } from '@airport/aviation-communication';
+import { QApp } from '@airport/aviation-communication';
 import { DbEntity, ApplicationEntity_LocalId as DbEntityId } from '@airport/ground-control';
 import { IDvo } from '../definition/IDvo';
 /**
@@ -6,7 +6,7 @@ import { IDvo } from '../definition/IDvo';
  */
 export declare class Dvo<Entity, EntityVDescriptor> implements IDvo<Entity, EntityVDescriptor> {
     protected dbEntity: DbEntity;
-    constructor(dbEntityId: DbEntityId | DbEntity, qApplication?: QApplication);
+    constructor(dbEntityId: DbEntityId | DbEntity, qApplication?: QApp);
     validate(entity: Entity, rules: EntityVDescriptor): Promise<boolean>;
 }
 //# sourceMappingURL=Dvo.d.ts.map

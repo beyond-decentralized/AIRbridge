@@ -1,4 +1,4 @@
-import { QApplication } from '@airport/aviation-communication'
+import { QApp } from '@airport/aviation-communication'
 import {
   DbEntity,
   ApplicationEntity_LocalId as DbEntityId,
@@ -16,7 +16,7 @@ export class Dvo<Entity,
 
   constructor(
     dbEntityId: DbEntityId | DbEntity,
-    qApplication?: QApplication,
+    qApplication?: QApp,
   ) {
     if (typeof dbEntityId === 'number') {
       this.dbEntity = qApplication.__dbApplication__.currentVersion[0]
