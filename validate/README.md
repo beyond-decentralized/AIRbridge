@@ -20,48 +20,40 @@ is tedious and error prone.  To solve this issue
 validating entity model trees:
 
 ```typescript
-@Injected()
-export class AgreementDvo
-    extends BaseAgreementDvo {
+@Entity()
+export class Parent extends AirEntity {
 
-    async validateAgreement() {
-        await this.agreementDvo.validate(agreement, {
-            agreementReasons: {
-                reason: and(
-                    uniqueIn(agreement),
-                    or(
-                        exists(),
-                        {
-                            factor: or(
-                                exists(), {
-                                    customText: length(5, 50),
-                                    action: isNull(),
-                                    object: isNull()
-                                }, {
-                                    action: oneOf('Helps', 'Lets'),
-                                    customText: isNull(),
-                                    object: oneOf('Me', 'Them', 'Us', 'You'),
-                                }
-                            ),
-                            position: or(
-                                exists(),
-                                {
-                                    name: length(5, 100)
-                                }
-                            )
-                        },
-                    )
-                ),
-                share: between(-100, 100)
-            },
-            idea: exists(),
-            situationIdea: or(
-                isNull(),
-                exists(byId(), {
-                    idea: equals(value(agreement.idea))
-                }))
-        })
+    value: string;
+
+    @OneToMany({mappedBy: 'parent'})
+    children: Child[];
+}
+
+@Entity()
+export class Child extends AirEntity {
+
+    value: string;
+
+    @ManyToOne()
+    parent: Parent;
+}
+
+@Injected()
+export class ParentDvo extends BaseParentDvo {
+
+    myParentValidator = this.validator(parent => ({
+            value: oneOf('Great Parent', 'Best Parent'),
+            children: or(
+                exists(),
+                {
+                    value: length(3, 50)
+                })
+        }))
+
+    async validateParent(parent: Parent) {
+        await this.validate(parent, this.myParentValidator)
     }
+
 }
 ```
 
