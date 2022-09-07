@@ -8,6 +8,9 @@ node_modules
 # Ignore test build files
 /lib
 
+# Ignore generated files
+/dist
+
 # Ignore Rush temporary files
 /common/temp/**
 
