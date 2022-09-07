@@ -9,7 +9,7 @@ node_modules
 /lib
 
 # Ignore generated files
-/dist
+**/dist
 
 # Ignore Rush temporary files
 /common/temp/**
