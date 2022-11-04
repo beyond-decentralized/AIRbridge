@@ -36,6 +36,7 @@ dependencies:
   '@rush-temp/sequence': 'file:projects/sequence.tgz'
   '@rush-temp/server': 'file:projects/server.tgz_tslib@2.4.0'
   '@rush-temp/server-1': 'file:projects/server-1.tgz'
+  '@rush-temp/session-state': 'file:projects/session-state.tgz'
   '@rush-temp/sqlite': 'file:projects/sqlite.tgz'
   '@rush-temp/sqljs': 'file:projects/sqljs.tgz'
   '@rush-temp/takeoff': 'file:projects/takeoff.tgz'
@@ -12780,7 +12781,7 @@ packages:
     dev: false
     name: '@rush-temp/blueprint'
     resolution:
-      integrity: sha512-DzjhY0ldN+SgMTdDKxn+keKOwN41h59tr/xTxEfNC/Vy1LavhXntDmSn5MJEGQP/eGzjKPkL3W9XAS5eMOP2gA==
+      integrity: sha512-1BaAU7e5erczy+qWKW87KS1X1fTov75Owl1IbTokOUlbgcBo7XKNvoXK642DOJ5RbK9NtYMAjlhaQUgRepAwqA==
       tarball: 'file:projects/blueprint.tgz'
     version: 0.0.0
   'file:projects/check-in.tgz':
@@ -13120,6 +13121,24 @@ packages:
       integrity: sha512-wcdMg6lfY+90l6meYWIzKn7Lx5Ie2mgK3g5UD48+tYDHWVAfg8HHD4DkQkPf52lMt0bCw8oH929wnBShKNAGug==
       tarball: 'file:projects/server.tgz'
     version: 0.0.0
+  'file:projects/session-state.tgz':
+    dependencies:
+      '@rollup/plugin-commonjs': 21.1.0_rollup@2.77.2
+      '@rollup/plugin-node-resolve': 13.3.0_rollup@2.77.2
+      rollup: 2.77.2
+      rollup-plugin-dts: 4.2.2_rollup@2.77.2+typescript@4.8.2
+      rollup-plugin-peer-deps-external: 2.2.4_rollup@2.77.2
+      rollup-plugin-terser: 7.0.2_rollup@2.77.2
+      rollup-plugin-typescript2: 0.33.0_rollup@2.77.2+typescript@4.8.2
+      tslib: 2.4.0
+      typescript: 4.8.2
+      uuid: 8.3.2
+    dev: false
+    name: '@rush-temp/session-state'
+    resolution:
+      integrity: sha512-ERZ4J3lBlcqlN0x1qKsdNh1xo7FIATPC5gg+apg/50KPSaZ6UoqgmjX3DeuJcnTpMZ1hA2Goeg9Gr9lESh0yIQ==
+      tarball: 'file:projects/session-state.tgz'
+    version: 0.0.0
   'file:projects/sqlite.tgz':
     dependencies:
       '@rollup/plugin-commonjs': 21.1.0_rollup@2.77.2
@@ -13264,7 +13283,7 @@ packages:
     dev: false
     name: '@rush-temp/terminal'
     resolution:
-      integrity: sha512-9c0x6AD8RM8LCB0HWpA6zDAZgiCNRb3eUSHEUmZDWRjCfj9e2AY/E+JAjYI5/LzKXi578ZIbeAbbPBCV5IaNww==
+      integrity: sha512-ErI2ymoJeGzQboL4zJ0gxSTHZTzB8NgOjRW8OMUn9nWQHJ5YfWuiFvPx99EBzj+xBYO7qdk78BK9WNXwTeL4dw==
       tarball: 'file:projects/terminal.tgz'
     version: 0.0.0
   'file:projects/tower.tgz':
@@ -13282,7 +13301,7 @@ packages:
     dev: false
     name: '@rush-temp/tower'
     resolution:
-      integrity: sha512-+3AaMnHs+1j+JuMgRRr4fn0H80cVe1tGgdfXCHbF2ED0qzlBlwqrinuDXIuQBIwEwE+91wbsT+C5ueYTXV59Dw==
+      integrity: sha512-JBt5D1Op2U4f6Rdx+KIFdjwbHaRCmd9w7llDWozE4r9nUHiTP5MHVxYVxArU/JpYprceplZy7DsCUqZD4G2QLA==
       tarball: 'file:projects/tower.tgz'
     version: 0.0.0
   'file:projects/travel-document-checkpoint.tgz':
@@ -13572,6 +13591,7 @@ specifiers:
   '@rush-temp/sequence': 'file:./projects/sequence.tgz'
   '@rush-temp/server': 'file:./projects/server.tgz'
   '@rush-temp/server-1': 'file:./projects/server-1.tgz'
+  '@rush-temp/session-state': 'file:./projects/session-state.tgz'
   '@rush-temp/sqlite': 'file:./projects/sqlite.tgz'
   '@rush-temp/sqljs': 'file:./projects/sqljs.tgz'
   '@rush-temp/takeoff': 'file:./projects/takeoff.tgz'
