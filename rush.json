@@ -7,11 +7,21 @@
   "projectFolderMaxDepth": 9,
   "projects": [
     {
+      "packageName": "airbridge",
+      "projectFolder": ".",
+      "shouldPublish": true
+    },
+    {
       "packageName": "@airbridge/validate",
       "projectFolder": "validate",
       "shouldPublish": true
     },
     // AIRport "apis" folder (alphabetical order)
+    {
+      "packageName": "airport",
+      "projectFolder": "../AIRport",
+      "shouldPublish": true
+    },
     {
       "packageName": "@airport/air-traffic-control",
       "projectFolder": "../AIRport/apis/air-traffic-control",
@@ -189,11 +199,6 @@
       "shouldPublish": true
     },
     // AIRport "schemas" folder (alphabetical order)
-    {
-      "packageName": "@airport/schemas",
-      "projectFolder": "../AIRport/schemas",
-      "shouldPublish": true
-    },
     {
       "packageName": "@airport/airport-code",
       "projectFolder": "../AIRport/schemas/airport-code",
