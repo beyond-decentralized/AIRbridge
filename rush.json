@@ -191,7 +191,7 @@
     },
     {
       "packageName": "@airport/final-approach",
-      "projectFolder": "schemas/final-approach",
+      "projectFolder": "../AIRport/schemas/final-approach",
       "shouldPublish": true
     },
     {
