@@ -1,6 +1,11 @@
 # Airbridge
 
 FUTURE WORK
+
+## Build instructions
+
+Check out [AIRroot](https://github.com/beyond-decentralized/AIRroot) for framework build instructions.
+
 ## Why the name 
 
 Airport: "A jet bridge (also termed jetway, jetwalk, airgate, gangway, aerobridge/airbridge,
