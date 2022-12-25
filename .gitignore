@@ -2,6 +2,9 @@
 
 npm-debug.log
 
+.DS_Store
+**/.DS_Store
+
 # Ignore NPM package folders
 node_modules
 
