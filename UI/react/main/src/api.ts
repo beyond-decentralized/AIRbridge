@@ -1,9 +1,9 @@
-import { airportApi, Application, IUserAccountInfo, Repository, RepositoryNesting } from '@airport/server'
+import { airportApi, Application, IUserAccountInfo, Repository } from '@airport/server'
 import { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 
 export interface RepositoryGroup {
     name: string
-    repositoryNestings: RepositoryNesting[]
+    repositoryNestings: any[]
 }
 
 export function signUp(
@@ -74,22 +74,22 @@ function getRepositoryNestingsInGroups(
             repositoryNestings: []
         }
         const repositoryGroupMap: Map<string, RepositoryGroup> = new Map()
-        for (const repositoryNesting of repository.repositoryNestings) {
-            if (!repositoryNesting.nestingType) {
-                otherRepositoryGroup.repositoryNestings.push(repositoryNesting)
-                continue
-            }
+        // for (const repositoryNesting of repository.repositoryNestings) {
+        //     if (!repositoryNesting.nestingType) {
+        //         otherRepositoryGroup.repositoryNestings.push(repositoryNesting)
+        //         continue
+        //     }
 
-            let repositoryGroup = repositoryGroupMap.get(repositoryNesting.nestingType)
-            if (!repositoryGroup) {
-                repositoryGroup = {
-                    name: repositoryNesting.nestingType,
-                    repositoryNestings: []
-                }
-                repositoryGroupMap.set(repositoryNesting.nestingType, repositoryGroup)
-            }
-            repositoryGroup.repositoryNestings.push(repositoryNesting)
-        }
+        //     let repositoryGroup = repositoryGroupMap.get(repositoryNesting.nestingType)
+        //     if (!repositoryGroup) {
+        //         repositoryGroup = {
+        //             name: repositoryNesting.nestingType,
+        //             repositoryNestings: []
+        //         }
+        //         repositoryGroupMap.set(repositoryNesting.nestingType, repositoryGroup)
+        //     }
+        //     repositoryGroup.repositoryNestings.push(repositoryNesting)
+        // }
         const repositoryGroups = Array.from(repositoryGroupMap.values())
         repositoryGroups.sort((a, b) => {
             if (a.name > b.name) return 1;
