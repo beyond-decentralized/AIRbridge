@@ -13,6 +13,7 @@ node_modules
 
 # Ignore generated files
 **/dist
+**/build
 
 # Ignore Rush temporary files
 /common/temp/**
