@@ -5,10 +5,7 @@ import {
     Injected
 } from "@airport/direction-indicator";
 import {
-    IRepositoryManager,
-    Repository,
-    RepositoryMember,
-    RepositoryMemberDao
+    IRepositoryManager
 } from "@airport/holding-pattern/dist/app/bundle";
 import { ITerminalSessionManager } from "@airport/terminal-map";
 import { KeyRingDao } from "../dao/KeyRingDao";
@@ -18,15 +15,10 @@ import { RepositoryKey } from "../ddl/RepositoryKey";
 import { DbApplicationUtils, IKeyUtils } from "@airport/ground-control";
 import { application } from "../to_be_generated/app-declaration";
 import { v4 as guidv4 } from "uuid";
-import { IRepositoryKey } from "@airbridge/data-model";
-
-export interface INewRepositoryKeyResult {
-
-    memberGUID: string,
-    publicSigningKey: string
-    repositoryKey: IRepositoryKey
-
-}
+import { UserAccount } from "@airport/travel-document-checkpoint";
+import { Repository } from "@airport/holding-pattern";
+import { RepositoryMember, RepositoryMember_PublicSigningKey } from "../ddl/RepositoryMember";
+import { RepositoryMemberDao } from "../dao/RepositoryMemberDao";
 
 export interface IKeyRingManager {
 
@@ -36,11 +28,21 @@ export interface IKeyRingManager {
         context: IContext
     ): Promise<KeyRing>
 
-    addRepositoryKey(
-        repositoryGUID: string,
-        repositoryName: string,
+    createRepositoryMember(
+        repository: Repository,
+        userAccount: UserAccount,
+        isOwner: boolean,
+        isAdministrator: boolean,
+        canWrite: boolean,
+        addRepositoryKey: boolean,
         context: IContext
-    ): Promise<INewRepositoryKeyResult>
+    ): Promise<RepositoryMember>
+
+    addKeyToRepositoryMember(
+        repository: Repository,
+        repositoryMember: RepositoryMember,
+        context: IContext
+    ): Promise<void>
 
 }
 
@@ -86,8 +88,8 @@ export class KeyRingManager
             const keyRingContext = {
                 ...context,
                 applicationFullName: this.dbApplicationUtils.getApplication_FullName(application),
-                newRepositoryGUID: "DEVSERVR_" + userPrivateKey,
-                addRepositoryToKeyRing: false
+                newRepositoryGUID: 'DEVSERVR_' + userPrivateKey,
+                forKeyRingRepository: true
             }
 
             keyRing = new KeyRing()
@@ -106,14 +108,66 @@ export class KeyRingManager
         return keyRing
     }
 
-    async addRepositoryKey(
+    async createRepositoryMember(
+        repository: Repository,
+        userAccount: UserAccount,
+        isOwner: boolean,
+        isAdministrator: boolean,
+        canWrite: boolean,
+        addRepositoryKey: boolean,
+        context: IContext
+    ): Promise<RepositoryMember> {
+        const memberGUID = guidv4()
+        let publicSigningKey = null
+        if (addRepositoryKey) {
+            publicSigningKey = await this.addRepositoryKey(
+                memberGUID,
+                repository.GUID,
+                repository.name,
+                context
+            )
+        }
+
+        const repositoryMember = this.getRepositoryMember(
+            userAccount,
+            repository,
+            memberGUID,
+            isOwner,
+            isAdministrator,
+            canWrite,
+            publicSigningKey
+        )
+
+        await this.repositoryMemberDao.save(repositoryMember)
+
+        return repositoryMember
+    }
+
+    async addKeyToRepositoryMember(
+        repository: Repository,
+        repositoryMember: RepositoryMember,
+        context: IContext
+    ): Promise<void> {
+        const publicSigningKey = await this.addRepositoryKey(
+            repositoryMember.GUID,
+            repository.GUID,
+            repository.name,
+            context
+        )
+
+        repositoryMember.publicSigningKey = publicSigningKey
+
+        await this.repositoryMemberDao.save(repositoryMember)
+    }
+
+    private async addRepositoryKey(
+        memberGUID: string,
         repositoryGUID: string,
         repositoryName: string,
         context: IContext
-    ): Promise<INewRepositoryKeyResult> {
-        const encryptionKey = await this.keyUtils.getEncryptionKey()
+    ): Promise<RepositoryMember_PublicSigningKey> {
+        // const encryptionKey = await this.keyUtils.getEncryptionKey()
         const signingKey = await this.keyUtils.getSigningKey()
-        const memberGUID = guidv4()
 
         const userSession = await this.terminalSessionManager.getUserSession(context)
         if (!userSession) {
@@ -129,7 +183,6 @@ export class KeyRingManager
             signingKey.public, keyRing.privateMetaSigningKey, 521)
 
         const repositoryKey = new RepositoryKey()
-        repositoryKey.encryptionKey = encryptionKey
         repositoryKey.repositoryGUID = repositoryGUID
         repositoryKey.memberGUID = memberGUID
         repositoryKey.keyRing = userSession.keyRing
@@ -137,16 +190,31 @@ export class KeyRingManager
         repositoryKey.repositoryName = repositoryName
         keyRing.repositoryKeys.push(repositoryKey)
 
-        if (keyRing.id) {
-            repositoryKey.repository = keyRing.repository
-            await this.repositoryKeyDao.save(repositoryKey)
-        }
+        repositoryKey.repository = keyRing.repository
+        await this.repositoryKeyDao.save(repositoryKey)
 
-        return {
-            memberGUID,
-            publicSigningKey: `${signingKey.public}|${publicSigningKeySignature}`,
-            repositoryKey
-        }
+        return `${signingKey.public}|${publicSigningKeySignature}`
+    }
+
+    private getRepositoryMember(
+        userAccount: UserAccount,
+        repository: Repository,
+        GUID: string,
+        isOwner: boolean,
+        isAdministrator: boolean,
+        canWrite: boolean,
+        publicSigningKey: string
+    ): RepositoryMember {
+        const repositoryMember = new RepositoryMember()
+        repositoryMember.GUID = GUID
+        repositoryMember.isOwner = isOwner
+        repositoryMember.isAdministrator = isAdministrator
+        repositoryMember.canWrite = canWrite
+        repositoryMember.userAccount = userAccount
+        repositoryMember.repository = repository
+        repositoryMember.publicSigningKey = publicSigningKey
+
+        return repositoryMember
     }
 
 }

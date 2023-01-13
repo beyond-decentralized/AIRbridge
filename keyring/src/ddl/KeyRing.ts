@@ -7,11 +7,11 @@ import { RepositoryKey } from "./RepositoryKey";
 export class KeyRing extends AirEntity {
 
     @Column({ name: 'PRIVATE_KEY', nullable: false })
-    privateKey: string
+    privateKey?: string
 
     @Column({ name: 'PRIVATE_META_SIGNING_KEY', nullable: false })
-    privateMetaSigningKey: string
+    privateMetaSigningKey?: string
 
     @OneToMany({ mappedBy: 'keyRing' })
-    repositoryKeys: RepositoryKey[] = []
+    repositoryKeys?: RepositoryKey[] = []
 }

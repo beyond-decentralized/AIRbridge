@@ -6,22 +6,22 @@ import { KeyRing } from "./KeyRing";
 @Table({ name: 'REPOSITORY_KEY' })
 export class RepositoryKey extends AirEntity {
 
-    @Column({ name: 'ENCRYPTION_KEY', nullable: false })
-    encryptionKey: string
+    @Column({ name: 'ENCRYPTION_KEY' })
+    encryptionKey?: string
 
     @Column({ name: 'MEMBER_GUID', nullable: false })
-    memberGUID: string
+    memberGUID?: string
 
     @Column({ name: 'REPOSITORY_GUID', nullable: false })
-    repositoryGUID: string
+    repositoryGUID?: string
 
     @Column({ name: 'PRIVATE_SIGNING_KEY', nullable: false })
-    privateSigningKey: string
+    privateSigningKey?: string
 
     @Column({ name: 'REPOSITORY_NAME', nullable: false })
-    repositoryName: string
+    repositoryName?: string
 
     @ManyToOne()
-    keyRing: KeyRing
+    keyRing?: KeyRing
 
 }
