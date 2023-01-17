@@ -1,25 +1,33 @@
+import { RepositoryKey_EncryptionKey, RepositoryKey_PrivateSigningKey, RepositoryMember_GUID } from "@airbridge/data-model";
 import { AirEntity } from "@airport/final-approach";
-import { Column, Entity, ManyToOne, Table } from "@airport/tarmaq-entity";
+import { Repository_GUID, Repository_Name } from "@airport/ground-control";
+import { Column, DbString, Entity, ManyToOne, Table } from "@airport/tarmaq-entity";
 import { KeyRing } from "./KeyRing";
 
 @Entity()
 @Table({ name: 'REPOSITORY_KEY' })
-export class RepositoryKey extends AirEntity {
+export class RepositoryKey
+    extends AirEntity {
 
     @Column({ name: 'ENCRYPTION_KEY' })
-    encryptionKey?: string
+    @DbString()
+    encryptionKey?: RepositoryKey_EncryptionKey
 
     @Column({ name: 'MEMBER_GUID', nullable: false })
-    memberGUID?: string
+    @DbString()
+    memberGUID?: RepositoryMember_GUID
 
     @Column({ name: 'REPOSITORY_GUID', nullable: false })
-    repositoryGUID?: string
+    @DbString()
+    repositoryGUID?: Repository_GUID
 
     @Column({ name: 'PRIVATE_SIGNING_KEY', nullable: false })
-    privateSigningKey?: string
+    @DbString()
+    privateSigningKey?: RepositoryKey_PrivateSigningKey
 
     @Column({ name: 'REPOSITORY_NAME', nullable: false })
-    repositoryName?: string
+    @DbString()
+    repositoryName?: Repository_Name
 
     @ManyToOne()
     keyRing?: KeyRing

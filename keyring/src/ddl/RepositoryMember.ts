@@ -1,6 +1,9 @@
+import { RepositoryMember_CanWrite, RepositoryMember_GUID, RepositoryMember_IsAdministrator, RepositoryMember_IsOwner, RepositoryMember_PublicSigningKey } from "@airbridge/data-model";
 import { AirEntity } from "@airport/final-approach";
 import {
     Column,
+    DbBoolean,
+    DbString,
     Entity,
     JoinColumn,
     ManyToOne,
@@ -10,32 +13,30 @@ import {
     UserAccount
 } from "@airport/travel-document-checkpoint/dist/app/bundle";
 
-export type RepositoryMember_LocalId = number
-export type RepositoryMember_GUID = string
-export type RepositoryMember_IsOwner = boolean
-export type RepositoryMember_IsAdministrator = boolean
-export type RepositoryMember_CanWrtie = boolean
-export type RepositoryMember_PublicSigningKey = string
-
 @Entity()
 @Table({ name: 'REPOSITORY_MEMBER' })
 export class RepositoryMember
     extends AirEntity {
 
     @Column({ name: 'REPOSITORY_MEMBER_GUID', nullable: false })
-    GUID: RepositoryMember_GUID
+    @DbString()
+    GUID?: RepositoryMember_GUID
 
     @Column({ name: 'IS_OWNER', nullable: false })
+    @DbBoolean()
     isOwner?: RepositoryMember_IsOwner = false
 
     @Column({ name: 'IS_ADMINISTRATOR', nullable: false })
+    @DbBoolean()
     isAdministrator?: RepositoryMember_IsAdministrator = false
 
     @Column({ name: 'CAN_WRITE', nullable: false })
-    canWrite?: RepositoryMember_CanWrtie = true
+    @DbBoolean()
+    canWrite?: RepositoryMember_CanWrite = true
 
     // Can be null for read-only permissions
     @Column({ name: 'PUBLIC_SIGNING_KEY' })
+    @DbString()
     publicSigningKey?: RepositoryMember_PublicSigningKey
 
     @ManyToOne()
@@ -44,6 +45,6 @@ export class RepositoryMember
         referencedColumnName: 'USER_ACCOUNT_LID',
         nullable: false
     })
-    userAccount: UserAccount
+    userAccount?: UserAccount
 
 }

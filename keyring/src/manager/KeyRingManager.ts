@@ -17,8 +17,9 @@ import { application } from "../to_be_generated/app-declaration";
 import { v4 as guidv4 } from "uuid";
 import { UserAccount } from "@airport/travel-document-checkpoint";
 import { Repository } from "@airport/holding-pattern";
-import { RepositoryMember, RepositoryMember_PublicSigningKey } from "../ddl/RepositoryMember";
+import { RepositoryMember } from "../ddl/RepositoryMember";
 import { RepositoryMemberDao } from "../dao/RepositoryMemberDao";
+import { RepositoryMember_PublicSigningKey } from "@airbridge/data-model";
 
 export interface IKeyRingManager {
 
@@ -185,7 +186,7 @@ export class KeyRingManager
         const repositoryKey = new RepositoryKey()
         repositoryKey.repositoryGUID = repositoryGUID
         repositoryKey.memberGUID = memberGUID
-        repositoryKey.keyRing = userSession.keyRing
+        repositoryKey.keyRing = userSession.keyRing as KeyRing
         repositoryKey.privateSigningKey = signingKey.private
         repositoryKey.repositoryName = repositoryName
         keyRing.repositoryKeys.push(repositoryKey)

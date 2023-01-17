@@ -1,5 +1,5 @@
 import { RepositorySynchronizationMessage, RepositorySynchronizationReadResponseFragment } from "@airport/arrivals-n-departures"
-import { RepositoryTransactionHistory_SyncTimestamp } from "@airport/holding-pattern"
+import { RepositoryTransactionHistory_SyncTimestamp } from "@airport/ground-control"
 
 export interface IClient {
 
