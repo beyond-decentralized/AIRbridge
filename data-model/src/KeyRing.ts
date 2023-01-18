@@ -1,6 +1,5 @@
-import { IAirEntity } from "@airport/ground-control"
+import { IAirEntity, RepositoryMember_GUID } from "@airport/ground-control"
 import { Repository_GUID, Repository_Name } from "@airport/ground-control";
-import { RepositoryMember_GUID } from "./RepositoryMember";
 
 export type RepositoryKey_EncryptionKey = string
 export type RepositoryKey_PrivateSigningKey = string
