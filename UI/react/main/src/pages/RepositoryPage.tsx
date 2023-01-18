@@ -1,4 +1,4 @@
-import { Repository } from '@airport/server';
+import { IRepository } from '@airport/server';
 import { IonAccordion, IonAccordionGroup, IonBackButton, IonButton, IonButtons, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonLabel, IonPage, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
 import { chevronBackOutline, documentOutline, eyeOutline, refresh } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
@@ -9,7 +9,7 @@ import './RepositoryPage.css';
 const RepositoryPage: React.FC = () => {
 
   const { repositoryId } = useParams<{ repositoryId: string; }>();
-  const [repository, setRepository] = useState<Repository>(() => null as any)
+  const [repository, setRepository] = useState<IRepository>(() => null as any)
   const [repositoryGroups, setRepositoryGroups] = useState<RepositoryGroup[]>(() => [])
   const [present, dismiss] = useIonToast()
 

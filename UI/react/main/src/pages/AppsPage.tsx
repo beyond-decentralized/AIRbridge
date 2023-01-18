@@ -1,4 +1,4 @@
-import { Application } from '@airport/server';
+import { DbApplication } from '@airport/server';
 import { IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonPage, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
 import { refresh } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
@@ -6,7 +6,7 @@ import { getApplications } from '../api';
 import './AppsPage.css';
 
 const AppsPage: React.FC = () => {
-  const [applications, setApplications] = useState<Application[]>(() => [])
+  const [applications, setApplications] = useState<DbApplication[]>(() => [])
   const [present] = useIonToast()
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { Repository } from '@airport/server';
+import { IRepository } from '@airport/server';
 import { IonBackButton, IonButton, IonButtons, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonPage, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
 import { chevronBackOutline, documentOutline, eyeOutline, refresh } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
@@ -6,7 +6,7 @@ import { getRootRepositories } from '../api';
 import './RootRepositoriesPage.css';
 
 const RepositoriesPage: React.FC = () => {
-  const [rootRepositories, setRootRepositories] = useState<Repository[]>(() => null as any)
+  const [rootRepositories, setRootRepositories] = useState<IRepository[]>(() => null as any)
   const [present] = useIonToast()
 
   useEffect(() => {

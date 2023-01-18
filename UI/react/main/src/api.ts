@@ -1,4 +1,4 @@
-import { airportApi, Application, IUserAccountInfo, Repository } from '@airport/server'
+import { airportApi, DbApplication, IRepository, IUserAccountInfo } from '@airport/server'
 import { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 
 export interface RepositoryGroup {
@@ -14,14 +14,14 @@ export function signUp(
 }
 
 export function getApplications(
-    setApplications: (applications: Application[]) => void,
+    setApplications: (applications: DbApplication[]) => void,
     showMessage: (message: string, duration: number) => void
 ) {
     getApplicationsAsync(setApplications, showMessage).then()
 }
 
 async function getApplicationsAsync(
-    setApplications: (applications: Application[]) => void,
+    setApplications: (applications: DbApplication[]) => void,
     showMessage: (message: string, duration: number) => void
 ) {
     try {
@@ -34,7 +34,7 @@ async function getApplicationsAsync(
 }
 
 export async function getRootRepositories(
-    setRepositories: (repositories: Repository[]) => void,
+    setRepositories: (repositories: IRepository[]) => void,
     showMessage: (message: string, duration: number) => void
 ): Promise<void> {
     try {
@@ -48,7 +48,7 @@ export async function getRootRepositories(
 
 export async function getRepository(
     repositoryId: string,
-    setRepository: (repository: Repository) => void,
+    setRepository: (repository: IRepository) => void,
     setRepositoriesInGroups: (repositoryGroups: RepositoryGroup[]) => void,
     showMessage: (message: string, duration: number) => void
 ) {
@@ -64,7 +64,7 @@ export async function getRepository(
 }
 
 function getRepositoryNestingsInGroups(
-    repository: Repository,
+    repository: IRepository,
     setRepositoriesInGroups: (repositoryGroups: RepositoryGroup[]) => void,
     showMessage: (message: string, duration: number) => void
 ): void {
