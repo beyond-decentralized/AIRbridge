@@ -25,22 +25,19 @@ export interface IKeyRingManager {
         privateMetaSigningKey: string,
         context: IContext
     ): Promise<IKeyRing>
-    
-    createRepositoryMember(
-        repository: IRepository,
-        userAccount: IUserAccount,
-        isOwner: boolean,
-        isAdministrator: boolean,
-        canWrite: boolean,
-        addRepositoryKey: boolean,
-        context: IContext
-    ): Promise<IRepositoryMember>
 
     addKeyToRepositoryMember(
         repository: IRepository,
         repositoryMember: IRepositoryMember,
         context: IContext
     ): Promise<void>
+
+    addRepositoryKey(
+        memberGUID: string,
+        repositoryGUID: string,
+        repositoryName: string,
+        context: IContext
+    ): Promise<RepositoryMember_PublicSigningKey>
 
 }
 
@@ -106,41 +103,6 @@ export class KeyRingManager
         return keyRing
     }
 
-    async createRepositoryMember(
-        repository: IRepository,
-        userAccount: IUserAccount,
-        isOwner: boolean,
-        isAdministrator: boolean,
-        canWrite: boolean,
-        addRepositoryKey: boolean,
-        context: IContext
-    ): Promise<IRepositoryMember> {
-        const memberGUID = guidv4()
-        let publicSigningKey = null
-        if (addRepositoryKey) {
-            publicSigningKey = await this.addRepositoryKey(
-                memberGUID,
-                repository.GUID,
-                repository.name,
-                context
-            )
-        }
-
-        const repositoryMember = this.getRepositoryMember(
-            userAccount,
-            repository,
-            memberGUID,
-            isOwner,
-            isAdministrator,
-            canWrite,
-            publicSigningKey
-        )
-
-        await this.repositoryMemberDao.save(repositoryMember)
-
-        return repositoryMember
-    }
-
     async addKeyToRepositoryMember(
         repository: IRepository,
         repositoryMember: IRepositoryMember,
@@ -158,7 +120,7 @@ export class KeyRingManager
         await this.repositoryMemberDao.save(repositoryMember)
     }
 
-    private async addRepositoryKey(
+    async addRepositoryKey(
         memberGUID: string,
         repositoryGUID: string,
         repositoryName: string,
@@ -192,27 +154,6 @@ export class KeyRingManager
         await this.repositoryKeyDao.save(repositoryKey)
 
         return `${signingKey.public}|${publicSigningKeySignature}`
-    }
-
-    private getRepositoryMember(
-        userAccount: IUserAccount,
-        repository: IRepository,
-        GUID: string,
-        isOwner: boolean,
-        isAdministrator: boolean,
-        canWrite: boolean,
-        publicSigningKey: string
-    ): IRepositoryMember {
-        const repositoryMember: IRepositoryMember = new RepositoryMember()
-        repositoryMember.GUID = GUID
-        repositoryMember.isOwner = isOwner
-        repositoryMember.isAdministrator = isAdministrator
-        repositoryMember.canWrite = canWrite
-        repositoryMember.userAccount = userAccount
-        repositoryMember.repository = repository
-        repositoryMember.publicSigningKey = publicSigningKey
-
-        return repositoryMember
     }
 
 }

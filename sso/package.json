@@ -1,16 +1,32 @@
 {
   "name": "@airbridge/sso",
   "version": "0.0.1",
+  "airport": {
+    "domain": "bridge",
+    "application": "@airbridge/sso"
+  },
   "peerDependencies": {
-    "@airbridge/data-model": "0.0.1",
     "@airbridge/keyring": "0.0.1",
+    "@airbridge/validate": "0.0.1",
+    "@airport/air-traffic-control": "0.0.1",
+    "@airport/airgate": "0.0.1",
+    "@airport/autopilot": "0.0.1",
+    "@airport/check-in": "0.0.1",
+    "@airbridge/data-model": "0.0.1",
     "@airport/direction-indicator": "0.0.1",
     "@airport/ground-control": "0.0.1",
     "@airport/holding-pattern": "0.0.1",
+    "@airport/tarmaq-dao": "0.0.1",
+    "@airport/tarmaq-entity": "0.0.1",
+    "@airport/tarmaq-query": "0.0.1",
+    "@airport/terminal-map": "0.0.1",
+    "@airport/travel-document-checkpoint": "0.0.1",
     "@airway/client": "0.0.1",
-    "rxjs": "~7.4.0"
+    "rxjs": "~7.4.0",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
+    "@airport/runway": "0.0.1",
     "@airport/taxiway": "0.0.1",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-node-resolve": "^13.0.6",
@@ -24,13 +40,17 @@
     "typescript": "^4.5.2",
     "tslib": "^2.0.0"
   },
-  "main": "dist/esm/index.mjs",
+  "main": "dist/cjs/index.js",
   "module": "dist/esm/index.mjs",
+  "browser": "dist/esm/index.mjs",
+  "app": "dist/app/bundle.mjs",
   "files": [
     "dist"
   ],
   "scripts": {
+    "predev": "node generate.mjs",
     "dev": "rollup -c ./rollup.config.js -w",
+    "prebuild": "node generate.mjs",
     "build": "rollup -c ./rollup.config.js"
   },
   "types": "dist/esm/index.d.ts"
