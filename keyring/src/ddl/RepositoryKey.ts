@@ -1,13 +1,13 @@
 import { RepositoryKey_EncryptionKey, RepositoryKey_PrivateSigningKey } from "@airbridge/data-model";
-import { AirEntity } from "@airport/final-approach";
 import { RepositoryMember_GUID, Repository_GUID, Repository_Name } from "@airport/ground-control";
+import { InternalAirEntity } from "@airport/holding-pattern/dist/app/bundle";
 import { Column, DbString, Entity, ManyToOne, Table } from "@airport/tarmaq-entity";
 import { KeyRing } from "./KeyRing";
 
 @Entity()
 @Table({ name: 'REPOSITORY_KEY' })
 export class RepositoryKey
-    extends AirEntity {
+    extends InternalAirEntity {
 
     @Column({ name: 'ENCRYPTION_KEY' })
     @DbString()

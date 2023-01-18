@@ -1,11 +1,11 @@
 import { KeyRing_PrivateKey, KeyRing_PrivateMetaSigningKey } from "@airbridge/data-model";
-import { AirEntity } from "@airport/final-approach";
+import { InternalAirEntity } from "@airport/holding-pattern/dist/app/bundle";
 import { Column, DbString, Entity, OneToMany, Table } from "@airport/tarmaq-entity";
 import { RepositoryKey } from "./RepositoryKey";
 
 @Entity()
 @Table({ name: 'KEY_RING' })
-export class KeyRing extends AirEntity {
+export class KeyRing extends InternalAirEntity {
 
     @Column({ name: 'PRIVATE_KEY', nullable: false })
     @DbString()
