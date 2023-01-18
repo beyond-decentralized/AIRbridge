@@ -3,11 +3,10 @@
   "version": "0.0.1",
   "peerDependencies": {
     "@airbridge/data-model": "0.0.1",
-    "@airport/aviation-communication": "0.0.1",
+    "@airbridge/keyring": "0.0.1",
     "@airport/direction-indicator": "0.0.1",
     "@airport/ground-control": "0.0.1",
     "@airport/holding-pattern": "0.0.1",
-    "@airport/travel-document-checkpoint": "0.0.1",
     "@airway/client": "0.0.1",
     "rxjs": "~7.4.0"
   },
