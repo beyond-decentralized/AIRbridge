@@ -1,6 +1,6 @@
-import { RepositoryKey_EncryptionKey, RepositoryKey_PrivateSigningKey, RepositoryMember_GUID } from "@airbridge/data-model";
+import { RepositoryKey_EncryptionKey, RepositoryKey_PrivateSigningKey } from "@airbridge/data-model";
 import { AirEntity } from "@airport/final-approach";
-import { Repository_GUID, Repository_Name } from "@airport/ground-control";
+import { RepositoryMember_GUID, Repository_GUID, Repository_Name } from "@airport/ground-control";
 import { Column, DbString, Entity, ManyToOne, Table } from "@airport/tarmaq-entity";
 import { KeyRing } from "./KeyRing";
 

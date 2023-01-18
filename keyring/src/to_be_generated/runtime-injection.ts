@@ -3,11 +3,10 @@ import { app } from '@airport/direction-indicator'
 import { application } from './app-declaration'
 import {
     KeyRingDao,
-    RepositoryKeyDao,
-    RepositoryMemberDao
+    RepositoryKeyDao
 } from '../dao/dao'
 import { KeyRingManager } from '../manager/KeyRingManager'
-import { REPOSITORY_MANAGER } from '@airport/holding-pattern/dist/app/bundle'
+import { RepositoryMemberDao, REPOSITORY_MANAGER } from '@airport/holding-pattern/dist/app/bundle'
 import { REPOSITORY_LOADER } from '@airport/air-traffic-control'
 import { TERMINAL_SESSION_MANAGER } from '@airport/terminal-map'
 import { DbApplicationUtils, KeyUtils } from '@airport/ground-control'
@@ -19,8 +18,7 @@ keyring.register(
     KeyRingDao,
     KeyRingManager,
     MessageSigningManager,
-    RepositoryKeyDao,
-    RepositoryMemberDao
+    RepositoryKeyDao
 )
 
 keyring.setDependencies(KeyRingManager, {

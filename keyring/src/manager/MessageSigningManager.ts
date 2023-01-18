@@ -8,7 +8,7 @@ import { RepositoryKey } from "../ddl/RepositoryKey";
 export interface IMessageSigningManager {
 
     signMessages(
-        messages: RepositorySynchronizationMessage[],
+        unsingedMessages: RepositorySynchronizationMessage[],
         context: IContext
     ): Promise<void>
 
@@ -44,7 +44,8 @@ export class MessageSigningManager
             repositoryGUIDSet.add(unsignedMessage.data.history.repository.GUID)
         }
 
-        const repositoryKeys = await this.repositoryKeyDao.findByRepositoryGUIDs(Array.from(repositoryGUIDSet))
+        const repositoryKeys = await this.repositoryKeyDao
+            .findByRepositoryGUIDs(Array.from(repositoryGUIDSet))
         const repositoryKeysByRepositoryGUIDs: Map<Repository_GUID, RepositoryKey> = new Map()
 
         for (const repositoryKey of repositoryKeys) {
@@ -52,9 +53,11 @@ export class MessageSigningManager
         }
 
         for (const unsingedMessage of unsingedMessages) {
-            const repositoryKey = repositoryKeysByRepositoryGUIDs.get(unsingedMessage.data.history.repository.GUID)
+            const repositoryKey = repositoryKeysByRepositoryGUIDs
+                .get(unsingedMessage.data.history.repository.GUID)
             const contents = JSON.stringify(unsingedMessage)
-            unsingedMessage.signature = await this.keyUtils.sign(contents, repositoryKey.privateSigningKey)
+            unsingedMessage.signature = await this.keyUtils
+                .sign(contents, repositoryKey.privateSigningKey)
         }
     }
 
