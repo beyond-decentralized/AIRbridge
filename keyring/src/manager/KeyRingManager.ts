@@ -13,10 +13,9 @@ import { KeyRingDao } from "../dao/KeyRingDao";
 import { RepositoryKeyDao } from "../dao/RepositoryKeyDao";
 import { KeyRing } from "../ddl/KeyRing";
 import { RepositoryKey } from "../ddl/RepositoryKey";
-import { DbApplicationUtils, IKeyUtils, IRepository, IRepositoryMember, RepositoryMember_PublicSigningKey } from "@airport/ground-control";
+import { DbApplicationUtils, IKeyUtils, IRepository, IRepositoryMember, IUserAccount, RepositoryMember_PublicSigningKey } from "@airport/ground-control";
 import { application } from "../to_be_generated/app-declaration";
 import { v4 as guidv4 } from "uuid";
-import { IUserAccount } from "@airport/aviation-communication";
 import { IKeyRing, IRepositoryKey } from "@airbridge/data-model";
 
 export interface IKeyRingManager {
