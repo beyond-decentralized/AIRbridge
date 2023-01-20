@@ -88,7 +88,7 @@ export class KeyRingManager
             keyRing = new KeyRing()
             keyRing.privateKey = userPrivateKey
             keyRing.privateMetaSigningKey = privateMetaSigningKey
-            const userSession = await this.terminalSessionManager.getUserSession(context)
+            const userSession = await this.terminalSessionManager.getUserSession()
             userSession.keyRing = keyRing
 
             const repository = await this.repositoryManager
@@ -127,7 +127,7 @@ export class KeyRingManager
         // const encryptionKey = await this.keyUtils.getEncryptionKey()
         const signingKey = await this.keyUtils.getSigningKey()
 
-        const userSession = await this.terminalSessionManager.getUserSession(context)
+        const userSession = await this.terminalSessionManager.getUserSession()
         if (!userSession) {
             throw new Error(`No User Session found`)
         }

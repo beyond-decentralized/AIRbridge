@@ -31,10 +31,7 @@ export class MessageSigningManager
         unsingedMessages: RepositorySynchronizationMessage[],
         context: IContext
     ): Promise<void> {
-        const userSession = await this.terminalSessionManager.getUserSession(context)
-        if (!userSession || !userSession.keyRing) {
-            throw new Error(`No UserSession present.`)
-        }
+        const userSession = await this.terminalSessionManager.getUserSession()
         if (!userSession.keyRing) {
             throw new Error(`No KeyRing is not set on UserSession.`)
         }

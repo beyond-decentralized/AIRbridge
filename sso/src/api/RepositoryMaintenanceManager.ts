@@ -1,7 +1,7 @@
 import { IContext, Inject, Injected } from "@airport/direction-indicator";
-import { Repository } from "@airport/holding-pattern/dist/app/bundle";
+import { IRepositoryDao, Repository } from "@airport/holding-pattern/dist/app/bundle";
 import { IKeyRingManager } from "@airbridge/keyring/dist/app/bundle"
-import { IKeyUtils, IRepository, IRepositoryMember, IUserAccount, RepositoryMember_Status } from "@airport/ground-control";
+import { IKeyUtils, IRepository, IRepositoryMember, IUserAccount, RepositoryMember_Status, Repository_GUID } from "@airport/ground-control";
 import { RepositoryMemberDao } from "@airport/holding-pattern/dist/app/bundle";
 import { RepositoryMember } from "@airport/holding-pattern";
 import { v4 as guidv4 } from "uuid";
@@ -11,15 +11,11 @@ import { IHistoryManager, IOperationContext, ITerminalSessionManager } from "@ai
 export interface IRepositoryMaintenanceManager {
 
     selfJoinRepository(
-        repository: IRepository,
-        userAccount: IUserAccount,
-        context: IContext
+        repositoryGUID: Repository_GUID
     ): Promise<void>
 
     joinRepository(
-        repository: Repository,
-        userAccount: IUserAccount,
-        context: IContext
+        repositoryGUID: Repository_GUID
     ): Promise<void>
 
     inviteUserToRepository(
@@ -54,6 +50,9 @@ export class RepositoryMaintenanceManager
     keyUtils: IKeyUtils
 
     @Inject()
+    repositoryDao: IRepositoryDao
+
+    @Inject()
     repositoryMemberDao: RepositoryMemberDao
 
     @Inject()
@@ -61,13 +60,24 @@ export class RepositoryMaintenanceManager
 
     @Api()
     async selfJoinRepository(
-        repository: IRepository,
-        userAccount: IUserAccount,
-        context: IContext
+        repositoryGUID: Repository_GUID
     ): Promise<void> {
+        let context: IContext = arguments[1]
+
+        const userAccount = await this.terminalSessionManager.getUserAccountFromSession()
+
+        const repository = await this.repositoryDao.findRepository(repositoryGUID)
+        if (!repository) {
+            throw new Error(`Repository with GUID: ${repositoryGUID} is not found.`)
+        }
+        if (!repository.isPublic) {
+            throw new Error(`Cannot self-join a non-public Repository, use the joinRepository method.`)
+        }
+
         const repositoryMember = await this.repositoryMemberDao
             .findForRepositoryLocalIdAndUserEmail(repository._localId, userAccount.email)
         if (repositoryMember) {
+            console.warn(`User ${userAccount.email} is already a member of Repository ${repository.name}`)
             return
         }
 
@@ -78,10 +88,20 @@ export class RepositoryMaintenanceManager
 
     @Api()
     async joinRepository(
-        repository: IRepository,
-        userAccount: IUserAccount,
-        context: IContext
+        repositoryGUID: Repository_GUID
     ): Promise<void> {
+        let context: IContext = arguments[1]
+
+        const userAccount = await this.terminalSessionManager.getUserAccountFromSession()
+
+        const repository = await this.repositoryDao.findRepository(repositoryGUID)
+        if (!repository) {
+            throw new Error(`Repository with GUID: ${repositoryGUID} is not found.`)
+        }
+        if (repository.isPublic) {
+            throw new Error(`Cannot join a public Repository, use selfJoinRepository method.`)
+        }
+
         const repositoryMember: IRepositoryMember = await this.repositoryMemberDao
             .findForRepositoryLocalIdAndUserLocalId(repository._localId, userAccount._localId)
         if (!repositoryMember) {
@@ -92,7 +112,7 @@ export class RepositoryMaintenanceManager
             repository, repositoryMember, context
         )
 
-        await this.repositoryMemberDao.save(repositoryMember)
+        await this.repositoryMemberDao.save(repositoryMember, context)
 
         await this.addRepositoryMemberToHistory(
             repositoryMember,
@@ -135,7 +155,6 @@ export class RepositoryMaintenanceManager
         }
     }
 
-    @Api()
     async createRepositoryMember(
         repository: IRepository,
         userAccount: IUserAccount,
@@ -184,8 +203,7 @@ export class RepositoryMaintenanceManager
         isNew: boolean,
         context: IContext
     ): Promise<void> {
-        const userSession = await this.terminalSessionManager
-            .getUserSession(context)
+        const userSession = await this.terminalSessionManager.getUserSession()
         if (!userSession) {
             throw new Error('No User Session present')
         }
