@@ -1,11 +1,12 @@
 import { IContext, Inject, Injected } from "@airport/direction-indicator";
 import { Repository } from "@airport/holding-pattern/dist/app/bundle";
 import { IKeyRingManager } from "@airbridge/keyring/dist/app/bundle"
-import { IKeyUtils, IRepository, IRepositoryMember, IUserAccount, RepositoryMember_GUID, RepositoryMember_Status } from "@airport/ground-control";
+import { IKeyUtils, IRepository, IRepositoryMember, IUserAccount, RepositoryMember_Status } from "@airport/ground-control";
 import { RepositoryMemberDao } from "@airport/holding-pattern/dist/app/bundle";
 import { RepositoryMember } from "@airport/holding-pattern";
 import { v4 as guidv4 } from "uuid";
 import { Api } from "@airport/check-in";
+import { IHistoryManager, IOperationContext, ITerminalSessionManager } from "@airport/terminal-map";
 
 export interface IRepositoryMaintenanceManager {
 
@@ -17,7 +18,6 @@ export interface IRepositoryMaintenanceManager {
 
     joinRepository(
         repository: Repository,
-        memberGUID: RepositoryMember_GUID,
         userAccount: IUserAccount,
         context: IContext
     ): Promise<void>
@@ -45,13 +45,19 @@ export class RepositoryMaintenanceManager
     implements IRepositoryMaintenanceManager {
 
     @Inject()
+    historyManager: IHistoryManager
+
+    @Inject()
     keyRingManager: IKeyRingManager
+
+    @Inject()
+    keyUtils: IKeyUtils
 
     @Inject()
     repositoryMemberDao: RepositoryMemberDao
 
     @Inject()
-    keyUtils: IKeyUtils
+    terminalSessionManager: ITerminalSessionManager
 
     @Api()
     async selfJoinRepository(
@@ -60,7 +66,7 @@ export class RepositoryMaintenanceManager
         context: IContext
     ): Promise<void> {
         const repositoryMember = await this.repositoryMemberDao
-            .findForRepositoryAndUser(repository.GUID, userAccount.email)
+            .findForRepositoryLocalIdAndUserEmail(repository._localId, userAccount.email)
         if (repositoryMember) {
             return
         }
@@ -73,18 +79,26 @@ export class RepositoryMaintenanceManager
     @Api()
     async joinRepository(
         repository: IRepository,
-        memberGUID: RepositoryMember_GUID,
         userAccount: IUserAccount,
         context: IContext
     ): Promise<void> {
         const repositoryMember: IRepositoryMember = await this.repositoryMemberDao
-            .findForRepositoryAndUser(repository.GUID, userAccount.email)
+            .findForRepositoryLocalIdAndUserLocalId(repository._localId, userAccount._localId)
         if (!repositoryMember) {
             throw new Error(`User '${userAccount.email}' is not a member of Repository '${repository.name}'`)
         }
 
         await this.keyRingManager.addKeyToRepositoryMember(
             repository, repositoryMember, context
+        )
+
+        await this.repositoryMemberDao.save(repositoryMember)
+
+        await this.addRepositoryMemberToHistory(
+            repositoryMember,
+            repository,
+            false,
+            context
         )
     }
 
@@ -154,7 +168,45 @@ export class RepositoryMaintenanceManager
 
         await this.repositoryMemberDao.save(repositoryMember)
 
+        await this.addRepositoryMemberToHistory(
+            repositoryMember,
+            repository,
+            true,
+            context
+        )
+
         return repositoryMember
+    }
+
+    private async addRepositoryMemberToHistory(
+        repositoryMember: IRepositoryMember,
+        repository: IRepository,
+        isNew: boolean,
+        context: IContext
+    ): Promise<void> {
+        const userSession = await this.terminalSessionManager
+            .getUserSession(context)
+        if (!userSession) {
+            throw new Error('No User Session present')
+        }
+        const transaction = userSession.currentTransaction
+        if (!transaction) {
+            throw new Error('No Current Transaction present')
+        }
+        const actor = transaction.actor
+        if (!actor) {
+            throw new Error('No actor associated with transaction Id: ' + transaction.id)
+        }
+        const repositoryTransactionHistory = await this
+            .historyManager.getRepositoryTransactionHistory(
+                userSession.currentTransaction.transactionHistory,
+                repository._localId, actor, context as IOperationContext
+            )
+        if (isNew) {
+            repositoryTransactionHistory.newRepositoryMembers.push(repositoryMember)
+        } else {
+            repositoryTransactionHistory.updatedRepositoryMembers.push(repositoryMember)
+        }
     }
 
     private getRepositoryMember(

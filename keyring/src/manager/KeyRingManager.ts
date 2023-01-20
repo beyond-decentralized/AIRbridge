@@ -5,7 +5,6 @@ import {
     Injected
 } from "@airport/direction-indicator";
 import {
-    RepositoryMember,
     RepositoryMemberDao 
 } from "@airport/holding-pattern/dist/app/bundle";
 import { IRepositoryManager, ITerminalSessionManager } from "@airport/terminal-map";
@@ -15,7 +14,6 @@ import { KeyRing } from "../ddl/KeyRing";
 import { RepositoryKey } from "../ddl/RepositoryKey";
 import { DbApplicationUtils, IKeyUtils, IRepository, IRepositoryMember, IUserAccount, RepositoryMember_PublicSigningKey } from "@airport/ground-control";
 import { application } from "../to_be_generated/app-declaration";
-import { v4 as guidv4 } from "uuid";
 import { IKeyRing, IRepositoryKey } from "@airbridge/data-model";
 
 export interface IKeyRingManager {
@@ -94,7 +92,7 @@ export class KeyRingManager
             userSession.keyRing = keyRing
 
             const repository = await this.repositoryManager
-                .createRepository('Key ring', keyRingContext)
+                .createRepository('Key ring', false, keyRingContext)
             keyRing.repository = repository
 
             await this.keyRingDao.save(keyRing, keyRingContext)
