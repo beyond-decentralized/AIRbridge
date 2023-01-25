@@ -31,7 +31,6 @@ export interface IRepositoryMaintenanceManager {
         isAdministrator: RepositoryMember_IsAdministrator,
         canWrite: RepositoryMember_CanWrite,
         addRepositoryKey: boolean,
-        publicSigningKey: RepositoryMember_PublicSigningKey,
         context: IContext
     ): Promise<IRepositoryMember>
 
@@ -83,7 +82,7 @@ export class RepositoryMaintenanceManager
         }
 
         await this.createRepositoryMember(
-            repository, userAccount, false, false, true, true, null, context
+            repository, userAccount, false, false, true, true, context
         )
     }
 
@@ -146,7 +145,7 @@ export class RepositoryMaintenanceManager
         const base64EncodedKeyInvitationPrivateSigningKey = btoa(invitationSigningKey.private);
 
         const invitedRepositoryMember = await this.createRepositoryMember(
-            repository, null, false, false, true, false, null, context
+            repository, null, false, false, true, false, context
         )
         const base64EncodedKeyInvitationPublicSigningKey = btoa(invitationSigningKey.public);
 
@@ -183,11 +182,11 @@ export class RepositoryMaintenanceManager
         isAdministrator: RepositoryMember_IsAdministrator,
         canWrite: RepositoryMember_CanWrite,
         addRepositoryKey: boolean,
-        publicSigningKey: RepositoryMember_PublicSigningKey,
         context: IContext
     ): Promise<IRepositoryMember> {
+        let memberPublicSigningKey: RepositoryMember_PublicSigningKey = null
         if (addRepositoryKey) {
-            publicSigningKey = await this.keyRingManager.addRepositoryKey(
+            memberPublicSigningKey = await this.keyRingManager.addRepositoryKey(
                 repository.GUID,
                 repository.name
             )
@@ -199,7 +198,7 @@ export class RepositoryMaintenanceManager
             isOwner,
             isAdministrator,
             canWrite,
-            publicSigningKey
+            memberPublicSigningKey
         )
 
         await this.addRepositoryMemberInfoToHistory(
@@ -277,7 +276,7 @@ export class RepositoryMaintenanceManager
         isOwner: boolean,
         isAdministrator: boolean,
         canWrite: boolean,
-        memberPublicSigningKey: string
+        memberPublicSigningKey: RepositoryMember_PublicSigningKey,
     ): IRepositoryMember {
         const repositoryMember: IRepositoryMember = new RepositoryMember()
         repositoryMember.isOwner = isOwner

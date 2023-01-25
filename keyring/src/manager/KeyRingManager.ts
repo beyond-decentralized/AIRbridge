@@ -103,11 +103,8 @@ export class KeyRingManager
         if (!keyRing) {
             throw new Error(`No Key Ring found in User Session`)
         }
-
-        const publicSigningKeySignature = this.keyUtils.sign(
-            signingKey.public, keyRing.internalPrivateSigningKey, 521)
-
-        const memberPublicSigningKey = `${signingKey.public}|${publicSigningKeySignature}`
+        
+        const memberPublicSigningKey = signingKey.public
 
         const repositoryKey: IRepositoryKey = new RepositoryKey()
         repositoryKey.repositoryGUID = repositoryGUID
