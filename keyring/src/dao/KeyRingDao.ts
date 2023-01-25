@@ -1,3 +1,4 @@
+import { KeyRing_ExternalPrivateKey } from "@airbridge/data-model";
 import { Injected } from "@airport/direction-indicator";
 import { KeyRing } from "../ddl/KeyRing";
 import { BaseKeyRingDao } from "../generated/baseDaos";
@@ -8,7 +9,7 @@ import { QKeyRing } from "../generated/qInterfaces";
 export class KeyRingDao extends BaseKeyRingDao {
 
     async findKeyRing(
-        privateKey: string
+        externalPrivateKey: KeyRing_ExternalPrivateKey
     ): Promise<KeyRing> {
         let Q = Q_airbridge____at_airbridge_slash_keyring
         let kr: QKeyRing
@@ -18,7 +19,7 @@ export class KeyRingDao extends BaseKeyRingDao {
             FROM: [
                 kr = Q.KeyRing
             ],
-            WHERE: kr.privateKey.equals(privateKey)
+            WHERE: kr.externalPrivateKey.equals(externalPrivateKey)
         })
     }
 

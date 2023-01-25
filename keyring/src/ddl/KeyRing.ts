@@ -1,19 +1,25 @@
-import { KeyRing_PrivateKey, KeyRing_PrivateMetaSigningKey } from "@airbridge/data-model";
+import { IKeyRing, KeyRing_Email, KeyRing_ExternalPrivateKey, KeyRing_InternalPrivateSigningKey } from "@airbridge/data-model";
 import { InternalAirEntity } from "@airport/holding-pattern/dist/app/bundle";
 import { Column, DbString, Entity, OneToMany, Table } from "@airport/tarmaq-entity";
 import { RepositoryKey } from "./RepositoryKey";
 
 @Entity()
 @Table({ name: 'KEY_RING' })
-export class KeyRing extends InternalAirEntity {
+export class KeyRing
+    extends InternalAirEntity
+    implements IKeyRing {
 
-    @Column({ name: 'PRIVATE_KEY', nullable: false })
+    @Column({ name: "EMAIL", nullable: false })
     @DbString()
-    privateKey?: KeyRing_PrivateKey
+    email?: KeyRing_Email
 
-    @Column({ name: 'PRIVATE_META_SIGNING_KEY', nullable: false })
+    @Column({ name: 'EXTERNAL_PRIVATE_KEY', nullable: false })
     @DbString()
-    privateMetaSigningKey?: KeyRing_PrivateMetaSigningKey
+    externalPrivateKey?: KeyRing_ExternalPrivateKey
+
+    @Column({ name: 'INTERNAL_PRIVATE_SIGNING_KEY', nullable: false })
+    @DbString()
+    internalPrivateSigningKey?: KeyRing_InternalPrivateSigningKey
 
     @OneToMany({ mappedBy: 'keyRing' })
     repositoryKeys?: RepositoryKey[] = []

@@ -8,8 +8,7 @@ import { RepositoryKey } from "../ddl/RepositoryKey";
 export interface IMessageSigningManager {
 
     signMessages(
-        unsingedMessages: RepositorySynchronizationMessage[],
-        context: IContext
+        unsingedMessages: RepositorySynchronizationMessage[]
     ): Promise<void>
 
 }
@@ -29,20 +28,20 @@ export class MessageSigningManager
 
     async signMessages(
         unsingedMessages: RepositorySynchronizationMessage[],
-        context: IContext
     ): Promise<void> {
-        const userSession = await this.terminalSessionManager.getUserSession()
-        if (!userSession.keyRing) {
+        const keyRing = (await this.terminalSessionManager.getUserSession()).keyRing
+        if (!keyRing) {
             throw new Error(`No KeyRing is not set on UserSession.`)
         }
-        const repositoryGUIDSet: Set<Repository_GUID> = new Set()
 
+        const repositoryGUIDSet: Set<Repository_GUID> = new Set()
         for (const unsignedMessage of unsingedMessages) {
             repositoryGUIDSet.add(unsignedMessage.data.history.repository.GUID)
         }
 
         const repositoryKeys = await this.repositoryKeyDao
-            .findByRepositoryGUIDs(Array.from(repositoryGUIDSet))
+            .findByRepositoryGUIDs(keyRing.internalPrivateSigningKey,
+                Array.from(repositoryGUIDSet))
         const repositoryKeysByRepositoryGUIDs: Map<Repository_GUID, RepositoryKey> = new Map()
 
         for (const repositoryKey of repositoryKeys) {
@@ -50,11 +49,22 @@ export class MessageSigningManager
         }
 
         for (const unsingedMessage of unsingedMessages) {
+            const history = unsingedMessage.data.history
             const repositoryKey = repositoryKeysByRepositoryGUIDs
-                .get(unsingedMessage.data.history.repository.GUID)
+                .get(history.repository.GUID)
             const contents = JSON.stringify(unsingedMessage)
-            unsingedMessage.signature = await this.keyUtils
+
+            unsingedMessage.memberSignature = await this.keyUtils
                 .sign(contents, repositoryKey.privateSigningKey)
+
+            if (history.invitationPrivateSigningKey) {
+                unsingedMessage.acceptanceSignature = await this.keyUtils
+                    .sign(contents, history.invitationPrivateSigningKey)
+            }
+            if (history.invitationPrivateSigningKey || history.isRepositoryCreation) {
+                unsingedMessage.userAccountSignature = await this.keyUtils
+                    .sign(contents, keyRing.internalPrivateSigningKey)
+            }
         }
     }
 

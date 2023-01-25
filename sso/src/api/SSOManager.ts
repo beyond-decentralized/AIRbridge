@@ -6,6 +6,7 @@ import { IKeyUtils } from "@airport/ground-control";
 import { IUserAccountInfo, IUserSession, TerminalStore, UserStore } from '@airport/terminal-map'
 import { IUserAccountManager } from "@airport/travel-document-checkpoint/dist/app/bundle";
 import { ISignInAdapter } from "../signIn/SignInAdapter";
+import { UserAccount_Email } from "@airport/aviation-communication";
 
 export interface ISSOManager {
 
@@ -75,12 +76,14 @@ export class SSOManager
 
         session.keyRing = keyRing
 
-        const sessionMapByEmail = this.userStore.getSessionMapByEmail()
-        sessionMapByEmail.set(userAccount.email, session)
+        const sessionMapByAccountPublicSigningKey = this.userStore
+            .getSessionMapByAccountPublicSigningKey()
+        sessionMapByAccountPublicSigningKey.set(
+            userAccount.accountPublicSigningKey, session)
 
         this.userStore.state.next({
             allSessions,
-            sessionMapByEmail
+            sessionMapByAccountPublicSigningKey
         })
     }
 
@@ -93,7 +96,7 @@ export class SSOManager
 
     @Api()
     async signIn(
-        email: string
+        email: UserAccount_Email
     ): Promise<IKeyRing> {
         throw new Error(`Implement`);
         // return await this.signInAdapter.getKeyRing({

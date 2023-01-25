@@ -1,10 +1,9 @@
 import { IContext, Inject, Injected } from "@airport/direction-indicator";
-import { IRepositoryDao, Repository } from "@airport/holding-pattern/dist/app/bundle";
+import { IRepositoryDao, Repository, RepositoryMemberInvitation } from "@airport/holding-pattern/dist/app/bundle";
 import { IKeyRingManager } from "@airbridge/keyring/dist/app/bundle"
-import { IKeyUtils, IRepository, IRepositoryMember, IUserAccount, RepositoryMember_Status, Repository_GUID } from "@airport/ground-control";
+import { IKeyUtils, IRepository, IRepositoryMember, IRepositoryTransactionHistory, ITransactionHistory, IUserAccount, RepositoryMemberInvitation_PrivateSigningKey, RepositoryMemberInvitation_PublicSigningKey, RepositoryMember_CanWrite, RepositoryMember_IsAdministrator, RepositoryMember_IsOwner, RepositoryMember_PublicSigningKey, RepositoryMember_Status, Repository_GUID } from "@airport/ground-control";
 import { RepositoryMemberDao } from "@airport/holding-pattern/dist/app/bundle";
-import { RepositoryMember } from "@airport/holding-pattern";
-import { v4 as guidv4 } from "uuid";
+import { RepositoryMember, RepositoryMemberAcceptance } from "@airport/holding-pattern";
 import { Api } from "@airport/check-in";
 import { IHistoryManager, IOperationContext, ITerminalSessionManager } from "@airport/terminal-map";
 
@@ -14,23 +13,25 @@ export interface IRepositoryMaintenanceManager {
         repositoryGUID: Repository_GUID
     ): Promise<void>
 
-    joinRepository(
-        repositoryGUID: Repository_GUID
+    acceptRepositoryMemberInvitation(
+        repositoryGUID: Repository_GUID,
+        base64EncodedInvitationPrivateSigningKey: RepositoryMemberInvitation_PrivateSigningKey,
+        base64EncodedInvitationPublicSigningKey: RepositoryMemberInvitation_PublicSigningKey,
     ): Promise<void>
 
     inviteUserToRepository(
         repository: Repository,
-        userEmail: string,
-        context: IContext
+        userEmail: string
     ): Promise<void>
 
     createRepositoryMember(
         repository: IRepository,
         userAccount: IUserAccount,
-        isOwner: boolean,
-        isAdministrator: boolean,
-        canWrite: boolean,
+        isOwner: RepositoryMember_IsOwner,
+        isAdministrator: RepositoryMember_IsAdministrator,
+        canWrite: RepositoryMember_CanWrite,
         addRepositoryKey: boolean,
+        publicSigningKey: RepositoryMember_PublicSigningKey,
         context: IContext
     ): Promise<IRepositoryMember>
 
@@ -75,20 +76,22 @@ export class RepositoryMaintenanceManager
         }
 
         const repositoryMember = await this.repositoryMemberDao
-            .findForRepositoryLocalIdAndUserEmail(repository._localId, userAccount.email)
+            .findForRepositoryLocalIdAndAccountPublicSingingKey(repository._localId, userAccount.accountPublicSigningKey)
         if (repositoryMember) {
-            console.warn(`User ${userAccount.email} is already a member of Repository ${repository.name}`)
+            console.warn(`User ${userAccount.username} is already a member of Repository ${repository.name}`)
             return
         }
 
         await this.createRepositoryMember(
-            repository, userAccount, false, false, true, true, context
+            repository, userAccount, false, false, true, true, null, context
         )
     }
 
     @Api()
-    async joinRepository(
-        repositoryGUID: Repository_GUID
+    async acceptRepositoryMemberInvitation(
+        repositoryGUID: Repository_GUID,
+        base64EncodedInvitationPrivateSigningKey: RepositoryMemberInvitation_PrivateSigningKey,
+        base64EncodedInvitationPublicSigningKey: RepositoryMemberInvitation_PublicSigningKey,
     ): Promise<void> {
         let context: IContext = arguments[1]
 
@@ -102,22 +105,32 @@ export class RepositoryMaintenanceManager
             throw new Error(`Cannot join a public Repository, use selfJoinRepository method.`)
         }
 
-        const repositoryMember: IRepositoryMember = await this.repositoryMemberDao
-            .findForRepositoryLocalIdAndUserLocalId(repository._localId, userAccount._localId)
-        if (!repositoryMember) {
-            throw new Error(`User '${userAccount.email}' is not a member of Repository '${repository.name}'`)
+        const invitationPublicSigningKey = atob(base64EncodedInvitationPublicSigningKey)
+
+        const acceptingRepositoryMember: IRepositoryMember = await this.repositoryMemberDao
+            .findForRepositoryLocalIdAndIvitationPublicSigningKey(
+                repository._localId, invitationPublicSigningKey)
+        if (!acceptingRepositoryMember) {
+            throw new Error(`User '${userAccount.username}' is not a member of Repository '${repository.name}'`)
         }
 
-        await this.keyRingManager.addKeyToRepositoryMember(
-            repository, repositoryMember, context
+        const publicSigningKey = await this.keyRingManager.addRepositoryKey(
+            repository.GUID,
+            repository.name
         )
+        acceptingRepositoryMember.memberPublicSigningKey = publicSigningKey
 
-        await this.repositoryMemberDao.save(repositoryMember, context)
+        const repositoryMemberAcceptance = new RepositoryMemberAcceptance()
+        repositoryMemberAcceptance.createdAt = new Date()
+        repositoryMemberAcceptance.acceptingRepositoryMember = acceptingRepositoryMember
+        repositoryMemberAcceptance.invitationPublicSigningKey = invitationPublicSigningKey
 
-        await this.addRepositoryMemberToHistory(
-            repositoryMember,
+        await this.addRepositoryMemberInfoToHistory(
+            acceptingRepositoryMember,
             repository,
-            false,
+            repositoryMemberAcceptance,
+            atob(base64EncodedInvitationPrivateSigningKey),
+            null,
             context
         )
     }
@@ -125,32 +138,40 @@ export class RepositoryMaintenanceManager
     @Api()
     async inviteUserToRepository(
         repository: Repository,
-        userEmail: string,
-        context: IContext
+        userEmail: string
     ): Promise<void> {
-        /*
-        const serializedKey = await this.keyUtils.getEncryptionKey()
+        let context: IContext = arguments[2]
 
-        const base64EncodedKey = btoa(serializedKey);
-        console.log('base64EncodedKey')
-        console.log(base64EncodedKey)
-        */
+        const invitationSigningKey = await this.keyUtils.getSigningKey()
+        const base64EncodedKeyInvitationPrivateSigningKey = btoa(invitationSigningKey.private);
 
-        const repositoryMember = await this.createRepositoryMember(
-            repository, null, false, false, true, false, context
+        const invitedRepositoryMember = await this.createRepositoryMember(
+            repository, null, false, false, true, false, null, context
+        )
+        const base64EncodedKeyInvitationPublicSigningKey = btoa(invitationSigningKey.public);
+
+        const repositoryMemberInvitation = new RepositoryMemberInvitation()
+        repositoryMemberInvitation.createdAt = new Date()
+        repositoryMemberInvitation.invitationPublicSigningKey = invitationSigningKey.public
+        repositoryMemberInvitation.invitedRepositoryMember = invitedRepositoryMember
+
+        await this.addRepositoryMemberInfoToHistory(
+            invitedRepositoryMember,
+            repository,
+            null,
+            null,
+            repositoryMemberInvitation,
+            context
         )
 
-        // await this.addJoinKey(repository, base64EncodedKey)
-
-        // const joinUrl = `https://localhost:3000/joinRepository/${repository.GUID}/${base64EncodedKey}`
-        const joinUrl = `https://localhost:3000/joinRepository/${repository.GUID}/${repositoryMember.GUID}`
+        const joinUrl = `https://localhost:3000/joinRepository/${repository.GUID}/${base64EncodedKeyInvitationPublicSigningKey}/${base64EncodedKeyInvitationPrivateSigningKey}`
 
         await this.sendEmail(userEmail,
             `Join '${repository.name}' on Turbase`, joinUrl)
 
         if (this.canUseWebShareAPI()) {
-            await this.share(`Join ${repository.name.substring(0, 20)}`,
-                `You have been invited to join ${repository.name} on Turbase`,
+            await this.share(`Join ${repository.name.substring(0, 20)}${repository.name.length > 20 ? '...' : ''}`,
+                `You are invited to join '${repository.name}' on Turbase`,
                 joinUrl)
         }
     }
@@ -158,51 +179,73 @@ export class RepositoryMaintenanceManager
     async createRepositoryMember(
         repository: IRepository,
         userAccount: IUserAccount,
-        isOwner: boolean,
-        isAdministrator: boolean,
-        canWrite: boolean,
+        isOwner: RepositoryMember_IsOwner,
+        isAdministrator: RepositoryMember_IsAdministrator,
+        canWrite: RepositoryMember_CanWrite,
         addRepositoryKey: boolean,
+        publicSigningKey: RepositoryMember_PublicSigningKey,
         context: IContext
     ): Promise<IRepositoryMember> {
-        const memberGUID = guidv4()
-        let publicSigningKey = null
         if (addRepositoryKey) {
             publicSigningKey = await this.keyRingManager.addRepositoryKey(
-                memberGUID,
                 repository.GUID,
-                repository.name,
-                context
+                repository.name
             )
         }
 
         const repositoryMember = this.getRepositoryMember(
             userAccount,
             repository,
-            memberGUID,
             isOwner,
             isAdministrator,
             canWrite,
             publicSigningKey
         )
 
-        await this.repositoryMemberDao.save(repositoryMember)
-
-        await this.addRepositoryMemberToHistory(
+        await this.addRepositoryMemberInfoToHistory(
             repositoryMember,
             repository,
-            true,
+            null,
+            null,
+            null,
             context
         )
 
         return repositoryMember
     }
 
-    private async addRepositoryMemberToHistory(
+    private async addRepositoryMemberInfoToHistory(
         repositoryMember: IRepositoryMember,
         repository: IRepository,
-        isNew: boolean,
+        repositoryMemberAcceptance: RepositoryMemberAcceptance,
+        invitationPrivateSigningKey: RepositoryMemberInvitation_PrivateSigningKey,
+        repositoryMemberInvitation: RepositoryMemberInvitation,
         context: IContext
     ): Promise<void> {
+        const {
+            repositoryTransactionHistory,
+            transactionHistory
+        } = await this.getRepositoryTransactionHistory(repository, context)
+        repositoryTransactionHistory.newRepositoryMembers.push(repositoryMember)
+        transactionHistory.allRepositoryMembers.push(repositoryMember)
+        if (repositoryMemberAcceptance) {
+            repositoryTransactionHistory.newRepositoryMemberAcceptances.push(repositoryMember)
+            repositoryTransactionHistory.invitationPrivateSigningKey = invitationPrivateSigningKey
+            transactionHistory.allRepositoryMemberAcceptances.push(repositoryMember)
+        }
+        if (repositoryMemberInvitation) {
+            repositoryTransactionHistory.newRepositoryMemberInvitations.push(repositoryMember)
+            transactionHistory.allRepositoryMemberInvitations.push(repositoryMember)
+        }
+    }
+
+    private async getRepositoryTransactionHistory(
+        repository: IRepository,
+        context: IContext
+    ): Promise<{
+        repositoryTransactionHistory: IRepositoryTransactionHistory,
+        transactionHistory: ITransactionHistory
+    }> {
         const userSession = await this.terminalSessionManager.getUserSession()
         if (!userSession) {
             throw new Error('No User Session present')
@@ -215,35 +258,34 @@ export class RepositoryMaintenanceManager
         if (!actor) {
             throw new Error('No actor associated with transaction Id: ' + transaction.id)
         }
+
         const repositoryTransactionHistory = await this
             .historyManager.getRepositoryTransactionHistory(
                 userSession.currentTransaction.transactionHistory,
                 repository._localId, actor, context as IOperationContext
             )
-        if (isNew) {
-            repositoryTransactionHistory.newRepositoryMembers.push(repositoryMember)
-        } else {
-            repositoryTransactionHistory.updatedRepositoryMembers.push(repositoryMember)
+
+        return {
+            repositoryTransactionHistory,
+            transactionHistory: userSession.currentTransaction.transactionHistory
         }
     }
 
     private getRepositoryMember(
         userAccount: IUserAccount,
         repository: IRepository,
-        GUID: string,
         isOwner: boolean,
         isAdministrator: boolean,
         canWrite: boolean,
-        publicSigningKey: string
+        memberPublicSigningKey: string
     ): IRepositoryMember {
         const repositoryMember: IRepositoryMember = new RepositoryMember()
-        repositoryMember.GUID = GUID
         repositoryMember.isOwner = isOwner
         repositoryMember.isAdministrator = isAdministrator
         repositoryMember.canWrite = canWrite
-        repositoryMember.userAccount = userAccount
+        repositoryMember.memberPublicSigningKey = memberPublicSigningKey
         repositoryMember.repository = repository
-        repositoryMember.publicSigningKey = publicSigningKey
+        repositoryMember.userAccount = userAccount
 
         if (userAccount) {
             repositoryMember.status = RepositoryMember_Status.JOINED

@@ -6,7 +6,7 @@ import {
     RepositoryKeyDao
 } from '../dao/dao'
 import { KeyRingManager } from '../manager/KeyRingManager'
-import { RepositoryMemberDao, REPOSITORY_MANAGER } from '@airport/holding-pattern/dist/app/bundle'
+import { REPOSITORY_MANAGER } from '@airport/holding-pattern/dist/app/bundle'
 import { REPOSITORY_LOADER } from '@airport/air-traffic-control'
 import { TERMINAL_SESSION_MANAGER } from '@airport/terminal-map'
 import { DbApplicationUtils, KeyUtils } from '@airport/ground-control'
@@ -28,7 +28,6 @@ keyring.setDependencies(KeyRingManager, {
     repositoryKeyDao: RepositoryKeyDao,
     repositoryLoader: REPOSITORY_LOADER,
     repositoryManager: REPOSITORY_MANAGER,
-    repositoryMemberDao: RepositoryMemberDao,
     terminalSessionManager: TERMINAL_SESSION_MANAGER
 })
 
