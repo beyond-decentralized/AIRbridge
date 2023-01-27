@@ -1,6 +1,5 @@
-import { RepositorySynchronizationMessage } from "@airport/arrivals-n-departures";
-import { IContext, Inject, Injected } from "@airport/direction-indicator";
-import { IKeyUtils, Repository_GUID } from "@airport/ground-control";
+import { Inject, Injected } from "@airport/direction-indicator";
+import { IKeyUtils, RepositorySynchronizationMessage, Repository_GUID } from "@airport/ground-control";
 import { ITerminalSessionManager } from "@airport/terminal-map";
 import { RepositoryKeyDao } from "../dao/RepositoryKeyDao";
 import { RepositoryKey } from "../ddl/RepositoryKey";

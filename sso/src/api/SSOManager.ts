@@ -1,4 +1,3 @@
-import { Api } from "@airport/check-in";
 import { IKeyRing } from "@airbridge/data-model";
 import { IKeyRingManager } from "@airbridge/keyring/dist/app/bundle";
 import { IContext, Inject, Injected } from "@airport/direction-indicator";
@@ -7,6 +6,7 @@ import { IUserAccountInfo, IUserSession, TerminalStore, UserStore } from '@airpo
 import { IUserAccountManager } from "@airport/travel-document-checkpoint/dist/app/bundle";
 import { ISignInAdapter } from "../signIn/SignInAdapter";
 import { UserAccount_Email } from "@airport/aviation-communication";
+import { Api } from "@airport/air-traffic-control";
 
 export interface ISSOManager {
 
