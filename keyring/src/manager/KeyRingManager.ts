@@ -59,7 +59,7 @@ export class KeyRingManager
         context: IContext
     ): Promise<IKeyRing> {
         await this.repositoryLoader.loadRepository(
-            'DEVSERVR', userPrivateKey, {})
+            'DEVSERVR_' + userPrivateKey, {})
 
         let keyRing: IKeyRing = await this.keyRingDao.findKeyRing(userPrivateKey)
 
@@ -103,7 +103,7 @@ export class KeyRingManager
         if (!keyRing) {
             throw new Error(`No Key Ring found in User Session`)
         }
-        
+
         const memberPublicSigningKey = signingKey.public
 
         const repositoryKey: IRepositoryKey = new RepositoryKey()
