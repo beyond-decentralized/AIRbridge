@@ -1,5 +1,5 @@
 import { Inject, Injected } from "@airport/direction-indicator";
-import { IKeyUtils, RepositorySynchronizationMessage, Repository_GUID } from "@airport/ground-control";
+import { IKeyUtils, SyncRepositoryMessage, Repository_GUID } from "@airport/ground-control";
 import { ITerminalSessionManager } from "@airport/terminal-map";
 import { RepositoryKeyDao } from "../dao/RepositoryKeyDao";
 import { RepositoryKey } from "../ddl/RepositoryKey";
@@ -7,7 +7,7 @@ import { RepositoryKey } from "../ddl/RepositoryKey";
 export interface IMessageSigningManager {
 
     signMessages(
-        unsingedMessages: RepositorySynchronizationMessage[]
+        unsingedMessages: SyncRepositoryMessage[]
     ): Promise<void>
 
 }
@@ -26,7 +26,7 @@ export class MessageSigningManager
     terminalSessionManager: ITerminalSessionManager
 
     async signMessages(
-        unsingedMessages: RepositorySynchronizationMessage[],
+        unsingedMessages: SyncRepositoryMessage[],
     ): Promise<void> {
         const keyRing = (await this.terminalSessionManager.getUserSession()).keyRing
         if (!keyRing) {

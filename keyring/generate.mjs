@@ -1,3 +1,3 @@
 import { generate } from '@airport/runway'
 
-await generate()
+//await generate()

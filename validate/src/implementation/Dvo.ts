@@ -1,7 +1,7 @@
 import { QApp } from '@airport/aviation-communication'
 import {
   DbEntity,
-  ApplicationEntity_LocalId as DbEntityId,
+  DbEntity_LocalId as DbEntityId,
 } from '@airport/ground-control';
 import { IDvo } from '../definition/IDvo';
 
@@ -19,7 +19,7 @@ export class Dvo<Entity,
     qApplication?: QApp,
   ) {
     if (typeof dbEntityId === 'number') {
-      this.dbEntity = qApplication.__dbApplication__.currentVersion[0]
+      this.dbEntity = qApplication.__dbDbApplication__.currentVersion[0]
         .applicationVersion.entities[dbEntityId];
     } else {
       this.dbEntity = dbEntityId;

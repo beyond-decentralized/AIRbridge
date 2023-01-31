@@ -66,7 +66,7 @@ export class KeyRingManager
         if (!keyRing) {
             const keyRingContext = {
                 ...context,
-                applicationFullName: this.dbApplicationUtils.getApplication_FullName(application),
+                applicationFullName: this.dbApplicationUtils.getDbApplication_FullName(application),
                 newRepositoryGUID: 'DEVSERVR_' + userPrivateKey,
                 forKeyRingRepository: true
             }
