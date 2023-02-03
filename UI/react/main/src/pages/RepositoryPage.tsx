@@ -3,14 +3,14 @@ import { IonAccordion, IonAccordionGroup, IonBackButton, IonButton, IonButtons, 
 import { chevronBackOutline, documentOutline, eyeOutline, refresh } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router';
-import { getRepository, RepositoryGroup } from '../api';
+import { getRepository } from '../api';
 import './RepositoryPage.css';
 
 const RepositoryPage: React.FC = () => {
 
   const { repositoryId } = useParams<{ repositoryId: string; }>();
   const [repository, setRepository] = useState<IRepository>(() => null as any)
-  const [repositoryGroups, setRepositoryGroups] = useState<RepositoryGroup[]>(() => [])
+  const [referencedRepositories, setReferencedRepositories] = useState<IRepository[]>(() => [])
   const [present, dismiss] = useIonToast()
 
   function showToast(
@@ -27,16 +27,16 @@ const RepositoryPage: React.FC = () => {
     getRepository(
       repositoryId,
       setRepository,
-      setRepositoryGroups,
+      setReferencedRepositories,
       showToast
     ).then()
   }, [repositoryId])
 
   let repositoryGroupsFragment
-  if (repositoryGroups && repositoryGroups.length) {
+  if (referencedRepositories && referencedRepositories.length) {
     repositoryGroupsFragment =
       <IonAccordionGroup>
-        {repositoryGroups.map((repositoryGroup, groupIndex) =>
+        {referencedRepositories.map((repositoryGroup, groupIndex) =>
           <IonAccordion
             key={'repositoryGroup' + groupIndex}
             value={repositoryGroup.name}
@@ -45,15 +45,15 @@ const RepositoryPage: React.FC = () => {
               <IonLabel>{repositoryGroup.name}</IonLabel>
             </IonItem>
             <div className="ion-padding" slot="content">
-              {repositoryGroup.repositoryNestings.map((repositoryNesting, nestingIndex) =>
+              {referencedRepositories.map((referencedRepository, nestingIndex) =>
                 <IonItem
                   color="light"
                   key={nestingIndex}
                   slot="header"
                 >
-                  <IonLabel>{repositoryNesting.childRepositoryName}</IonLabel>
+                  <IonLabel>{referencedRepository.name}</IonLabel>
                   <IonButton
-                    routerLink={'/repository/' + repositoryNesting.childRepository.GUID}
+                    routerLink={'/repository/' + referencedRepository.GUID}
                     fill="clear"
                   >
                     <IonIcon slot="start" icon={documentOutline}></IonIcon>
@@ -80,7 +80,7 @@ const RepositoryPage: React.FC = () => {
     repositoryFragment =
       <>
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton onClick={e => getRepository(repositoryId, setRepository, setRepositoryGroups, present)}>
+          <IonFabButton onClick={e => getRepository(repositoryId, setRepository, setReferencedRepositories, present)}>
             <IonIcon icon={refresh} />
           </IonFabButton>
         </IonFab>

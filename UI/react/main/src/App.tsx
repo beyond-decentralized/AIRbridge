@@ -13,7 +13,7 @@ import { IonReactRouter } from '@ionic/react-router';
 import { apps, briefcase, desktop } from 'ionicons/icons';
 import { AirLoginModal } from '@airbridge/ui-react-components'
 import RepositoryPage from './pages/RepositoryPage';
-import RootRepositoriesPage from './pages/RootRepositoriesPage';
+import RootRepositoriesPage from './pages/RepositoriesPage';
 import AppsPage from './pages/AppsPage';
 import UIsPage from './pages/UIsPage';
 

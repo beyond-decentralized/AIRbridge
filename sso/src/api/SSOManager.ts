@@ -64,7 +64,7 @@ export class SSOManager
         const signingKey = await this.keyUtils.getSigningKey(521)
 
         const { userAccount } = await this.userAccountManager
-            .addUserAccount(userAccountInfo.username, userAccountInfo.email,
+            .addUserAccount(userAccountInfo.username,
                 signingKey.public, context)
         session.userAccount = userAccount
 

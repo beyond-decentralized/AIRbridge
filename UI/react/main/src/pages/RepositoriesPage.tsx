@@ -2,24 +2,24 @@ import { IRepository } from '@airport/server';
 import { IonBackButton, IonButton, IonButtons, IonContent, IonFab, IonFabButton, IonHeader, IonIcon, IonItem, IonPage, IonTitle, IonToolbar, useIonToast } from '@ionic/react';
 import { chevronBackOutline, documentOutline, eyeOutline, refresh } from 'ionicons/icons';
 import { useEffect, useState } from 'react';
-import { getRootRepositories } from '../api';
-import './RootRepositoriesPage.css';
+import { getRepositories } from '../api';
+import './RepositoriesPage.css';
 
 const RepositoriesPage: React.FC = () => {
-  const [rootRepositories, setRootRepositories] = useState<IRepository[]>(() => null as any)
+  const [repositories, setRepositories] = useState<IRepository[]>(() => null as any)
   const [present] = useIonToast()
 
   useEffect(() => {
-    getRootRepositories(setRootRepositories, present).then()
+    getRepositories(setRepositories, present).then()
   }, [])
 
   let repositoriesFragment
-  if (!rootRepositories) {
+  if (!repositories) {
     repositoriesFragment =
       <IonItem>
         Loading ...
       </IonItem>
-  } else if (!rootRepositories.length) {
+  } else if (!repositories.length) {
     repositoriesFragment =
       <IonItem>
         No Repositories present
@@ -27,7 +27,7 @@ const RepositoriesPage: React.FC = () => {
   } else {
     repositoriesFragment =
       <>
-        {rootRepositories.map(repository =>
+        {repositories.map(repository =>
           <IonItem key={repository.GUID}>
             <div>
               <div className="root-repository-name">
@@ -64,12 +64,12 @@ const RepositoriesPage: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton text="" icon={chevronBackOutline} />
           </IonButtons>
-          <IonTitle>Root Repositories</IonTitle>
+          <IonTitle>Loaded Repositories</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent fullscreen>
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton onClick={e => getRootRepositories(setRootRepositories, present)}>
+          <IonFabButton onClick={e => getRepositories(setRepositories, present)}>
             <IonIcon icon={refresh} />
           </IonFabButton>
         </IonFab>

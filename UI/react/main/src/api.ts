@@ -1,11 +1,6 @@
 import { airportApi, DbApplication, IRepository, IUserAccountInfo } from '@airport/server'
 import { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 
-export interface RepositoryGroup {
-    name: string
-    repositoryNestings: any[]
-}
-
 export function signUp(
     ev: CustomEvent<OverlayEventDetail>,
     showMessage: (message: string, duration: number) => void
@@ -33,7 +28,7 @@ async function getApplicationsAsync(
     }
 }
 
-export async function getRootRepositories(
+export async function getRepositories(
     setRepositories: (repositories: IRepository[]) => void,
     showMessage: (message: string, duration: number) => void
 ): Promise<void> {
@@ -49,13 +44,13 @@ export async function getRootRepositories(
 export async function getRepository(
     repositoryId: string,
     setRepository: (repository: IRepository) => void,
-    setRepositoriesInGroups: (repositoryGroups: RepositoryGroup[]) => void,
+    setReferencedRepositories: (repositoryGroups: IRepository[]) => void,
     showMessage: (message: string, duration: number) => void
 ) {
     try {
         const repository = await airportApi.getRepository(repositoryId)
         setRepository(repository)
-        getRepositoryNestingsInGroups(repository, setRepositoriesInGroups,
+        getReferencedRepositories(repository, setReferencedRepositories,
             showMessage)
     } catch (e) {
         console.error(e)
@@ -63,46 +58,23 @@ export async function getRepository(
     }
 }
 
-function getRepositoryNestingsInGroups(
+function getReferencedRepositories(
     repository: IRepository,
-    setRepositoriesInGroups: (repositoryGroups: RepositoryGroup[]) => void,
+    setReferencedRepositories: (repositoryGroups: IRepository[]) => void,
     showMessage: (message: string, duration: number) => void
 ): void {
     try {
-        const otherRepositoryGroup: RepositoryGroup = {
-            name: 'Other',
-            repositoryNestings: []
-        }
-        const repositoryGroupMap: Map<string, RepositoryGroup> = new Map()
-        // for (const repositoryNesting of repository.repositoryNestings) {
-        //     if (!repositoryNesting.nestingType) {
-        //         otherRepositoryGroup.repositoryNestings.push(repositoryNesting)
-        //         continue
-        //     }
-
-        //     let repositoryGroup = repositoryGroupMap.get(repositoryNesting.nestingType)
-        //     if (!repositoryGroup) {
-        //         repositoryGroup = {
-        //             name: repositoryNesting.nestingType,
-        //             repositoryNestings: []
-        //         }
-        //         repositoryGroupMap.set(repositoryNesting.nestingType, repositoryGroup)
-        //     }
-        //     repositoryGroup.repositoryNestings.push(repositoryNesting)
-        // }
-        const repositoryGroups = Array.from(repositoryGroupMap.values())
-        repositoryGroups.sort((a, b) => {
-            if (a.name > b.name) return 1;
-            if (a.name < b.name) return -1;
-            return 0;
-        })
-        if (otherRepositoryGroup.repositoryNestings.length) {
-            repositoryGroups.push(otherRepositoryGroup)
-        }
-        setRepositoriesInGroups(repositoryGroups)
+        // const referencedRepositories = repository.references.map(
+        //     reference => reference.referencedRepository
+        // ).sort((a, b) => {
+        //     if (a.name > b.name) return 1;
+        //     if (a.name < b.name) return -1;
+        //     return 0;
+        // })
+        // setReferencedRepositories(referencedRepositories)
     } catch (e) {
         console.error(e)
-        showMessage('Error getting Repository Nestings', 10000)
+        showMessage('Error getting Referenced Repositories', 10000)
     }
 }
 
