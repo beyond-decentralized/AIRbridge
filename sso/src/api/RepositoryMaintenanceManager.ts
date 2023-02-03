@@ -228,13 +228,18 @@ export class RepositoryMaintenanceManager
         repositoryTransactionHistory.newRepositoryMembers.push(repositoryMember)
         transactionHistory.allRepositoryMembers.push(repositoryMember)
         if (repositoryMemberAcceptance) {
-            repositoryTransactionHistory.newRepositoryMemberAcceptances.push(repositoryMember)
-            repositoryTransactionHistory.invitationPrivateSigningKey = invitationPrivateSigningKey
-            transactionHistory.allRepositoryMemberAcceptances.push(repositoryMember)
+            repositoryTransactionHistory.newRepositoryMemberAcceptances
+                .push(repositoryMemberAcceptance)
+            repositoryTransactionHistory.invitationPrivateSigningKey
+                = invitationPrivateSigningKey
+            transactionHistory.allRepositoryMemberAcceptances
+                .push(repositoryMemberAcceptance)
         }
         if (repositoryMemberInvitation) {
-            repositoryTransactionHistory.newRepositoryMemberInvitations.push(repositoryMember)
-            transactionHistory.allRepositoryMemberInvitations.push(repositoryMember)
+            repositoryTransactionHistory.newRepositoryMemberInvitations
+                .push(repositoryMemberInvitation)
+            transactionHistory.allRepositoryMemberInvitations
+                .push(repositoryMemberInvitation)
         }
     }
 

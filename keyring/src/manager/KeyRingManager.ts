@@ -9,7 +9,7 @@ import { KeyRingDao } from "../dao/KeyRingDao";
 import { RepositoryKeyDao } from "../dao/RepositoryKeyDao";
 import { KeyRing } from "../ddl/KeyRing";
 import { RepositoryKey } from "../ddl/RepositoryKey";
-import { DbApplicationUtils, IKeyUtils, RepositoryMember_PublicSigningKey } from "@airport/ground-control";
+import { IDbApplicationUtils, IKeyUtils, RepositoryMember_PublicSigningKey } from "@airport/ground-control";
 import { application } from "../to_be_generated/app-declaration";
 import { IKeyRing, IRepositoryKey } from "@airbridge/data-model";
 
@@ -33,7 +33,7 @@ export class KeyRingManager
     implements IKeyRingManager {
 
     @Inject()
-    dbApplicationUtils: DbApplicationUtils
+    dbApplicationUtils: IDbApplicationUtils
 
     @Inject()
     keyRingDao: KeyRingDao
