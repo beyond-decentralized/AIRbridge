@@ -4,4 +4,4 @@ export * from '../generated/generated'
 export * from '../manager/KeyRingManager'
 export * from '../manager/MessageSigningManager'
 
-export * from './runtime-injection'
+export * from './keyring.runtime-injection'

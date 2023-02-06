@@ -3,4 +3,4 @@ export * from '../api/api'
 // export * from '../ddl/ddl'
 export * from '../generated/generated'
 
-export * from './runtime-injection'
+export * from './sso.runtime-injection'
