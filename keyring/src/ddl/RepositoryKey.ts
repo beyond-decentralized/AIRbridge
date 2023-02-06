@@ -12,25 +12,25 @@ export class RepositoryKey
 
     @Column({ name: 'ENCRYPTION_KEY' })
     @DbString()
-    encryptionKey?: RepositoryKey_EncryptionKey
+    encryptionKey: RepositoryKey_EncryptionKey
 
     @Column({ name: 'REPOSITORY_GUID', nullable: false })
     @DbString()
-    repositoryGUID?: Repository_GUID
+    repositoryGUID: Repository_GUID
 
     @Column({ name: 'PRIVATE_SIGNING_KEY', nullable: false })
     @DbString()
-    privateSigningKey?: RepositoryKey_PrivateSigningKey
+    privateSigningKey: RepositoryKey_PrivateSigningKey
 
     @Column({ name: 'PUBLIC_SIGNING_KEY', nullable: false })
     @DbString()
-    publicSigningKey?: RepositoryKey_PublicSigningKey
+    publicSigningKey: RepositoryKey_PublicSigningKey
 
     @Column({ name: 'REPOSITORY_NAME', nullable: false })
     @DbString()
-    repositoryName?: Repository_Name
+    repositoryName: Repository_Name
 
     @ManyToOne()
-    keyRing?: KeyRing
+    keyRing: KeyRing
 
 }
