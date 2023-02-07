@@ -19,7 +19,7 @@ export class Dvo<Entity,
     qApplication?: QApp,
   ) {
     if (typeof dbEntityId === 'number') {
-      this.dbEntity = qApplication.__dbDbApplication__.currentVersion[0]
+      this.dbEntity = qApplication.__dbApplication__.currentVersion[0]
         .applicationVersion.entities[dbEntityId];
     } else {
       this.dbEntity = dbEntityId;
