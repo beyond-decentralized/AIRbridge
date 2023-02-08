@@ -2,8 +2,7 @@ import { IContext, Inject, Injected } from "@airport/direction-indicator";
 import { IRepositoryDao, Repository, RepositoryMemberInvitation } from "@airport/holding-pattern/dist/app/bundle";
 import { IKeyRingManager } from "@airbridge/keyring/dist/app/bundle"
 import { IKeyUtils, IRepository, IRepositoryMember, IRepositoryTransactionHistory, ITransactionHistory, IUserAccount, RepositoryMemberInvitation_PrivateSigningKey, RepositoryMemberInvitation_PublicSigningKey, RepositoryMember_CanWrite, RepositoryMember_IsAdministrator, RepositoryMember_IsOwner, RepositoryMember_PublicSigningKey, RepositoryMember_Status, Repository_GUID } from "@airport/ground-control";
-import { RepositoryMemberDao } from "@airport/holding-pattern/dist/app/bundle";
-import { RepositoryMember, RepositoryMemberAcceptance } from "@airport/holding-pattern";
+import { RepositoryMember, RepositoryMemberAcceptance , RepositoryMemberDao } from "@airport/holding-pattern/dist/app/bundle";
 import { IHistoryManager, IOperationContext, ITerminalSessionManager } from "@airport/terminal-map";
 import { Api } from "@airport/air-traffic-control";
 
