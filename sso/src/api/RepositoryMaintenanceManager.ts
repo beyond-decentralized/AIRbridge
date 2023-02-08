@@ -65,7 +65,7 @@ export class RepositoryMaintenanceManager
 
         const userAccount = await this.terminalSessionManager.getUserAccountFromSession()
 
-        const repository = await this.repositoryDao.findRepository(repositoryGUID)
+        const repository = await this.repositoryDao.findRepository(repositoryGUID, context)
         if (!repository) {
             throw new Error(`Repository with GUID: ${repositoryGUID} is not found.`)
         }
@@ -74,7 +74,8 @@ export class RepositoryMaintenanceManager
         }
 
         const repositoryMember = await this.repositoryMemberDao
-            .findForRepositoryLocalIdAndAccountPublicSingingKey(repository._localId, userAccount.accountPublicSigningKey)
+            .findForRepositoryLocalIdAndAccountPublicSingingKey(repository._localId,
+                userAccount.accountPublicSigningKey, context)
         if (repositoryMember) {
             console.warn(`User ${userAccount.username} is already a member of Repository ${repository.name}`)
             return
@@ -95,7 +96,8 @@ export class RepositoryMaintenanceManager
 
         const userAccount = await this.terminalSessionManager.getUserAccountFromSession()
 
-        const repository = await this.repositoryDao.findRepository(repositoryGUID)
+        const repository = await this.repositoryDao.findRepository(
+            repositoryGUID, context)
         if (!repository) {
             throw new Error(`Repository with GUID: ${repositoryGUID} is not found.`)
         }
@@ -107,7 +109,7 @@ export class RepositoryMaintenanceManager
 
         const acceptingRepositoryMember: IRepositoryMember = await this.repositoryMemberDao
             .findForRepositoryLocalIdAndIvitationPublicSigningKey(
-                repository._localId, invitationPublicSigningKey)
+                repository._localId, invitationPublicSigningKey, context)
         if (!acceptingRepositoryMember) {
             throw new Error(`User '${userAccount.username}' is not a member of Repository '${repository.name}'`)
         }
