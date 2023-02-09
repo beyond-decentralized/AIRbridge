@@ -1,13 +1,14 @@
 import { KeyRingManager } from '@airbridge/keyring/dist/app/bundle'
-import { domain } from '@airport/direction-indicator'
+import { app } from '@airport/direction-indicator'
 import { KeyUtils } from '@airport/ground-control'
 import { RepositoryDao, RepositoryMemberDao } from '@airport/holding-pattern/dist/app/bundle'
 import { HISTORY_MANAGER, TerminalStore, TERMINAL_SESSION_MANAGER, UserStore } from '@airport/terminal-map'
 import { UserAccountManager } from '@airport/travel-document-checkpoint/dist/app/bundle'
 import { RepositoryMaintenanceManager } from '../api/RepositoryMaintenanceManager'
 import { SSOManager } from '../api/SSOManager'
+import { application } from './app-declaration'
 
-const sso = domain('airbridge').app('sso')
+const sso = app(application)
 
 sso.register(RepositoryMaintenanceManager, SSOManager)
 
