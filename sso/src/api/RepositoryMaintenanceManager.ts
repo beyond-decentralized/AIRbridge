@@ -202,6 +202,8 @@ export class RepositoryMaintenanceManager
             memberPublicSigningKey
         )
 
+        await this.repositoryMemberDao.insert([repositoryMember], context)
+
         await this.addRepositoryMemberInfoToHistory(
             repositoryMember,
             repository,
