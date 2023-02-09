@@ -127,6 +127,7 @@ export class RepositoryMaintenanceManager
 
         await this.addRepositoryMemberInfoToHistory(
             acceptingRepositoryMember,
+            true,
             repository,
             repositoryMemberAcceptance,
             atob(base64EncodedInvitationPrivateSigningKey),
@@ -145,7 +146,7 @@ export class RepositoryMaintenanceManager
         const invitationSigningKey = await this.keyUtils.getSigningKey()
         const base64EncodedKeyInvitationPrivateSigningKey = btoa(invitationSigningKey.private);
 
-        const invitedRepositoryMember = await this.createRepositoryMember(
+        const invitedRepositoryMember = await this.doCreateRepositoryMember(
             repository, null, false, false, true, false, context
         )
         const base64EncodedKeyInvitationPublicSigningKey = btoa(invitationSigningKey.public);
@@ -157,6 +158,7 @@ export class RepositoryMaintenanceManager
 
         await this.addRepositoryMemberInfoToHistory(
             invitedRepositoryMember,
+            false,
             repository,
             null,
             null,
@@ -185,6 +187,38 @@ export class RepositoryMaintenanceManager
         addRepositoryKey: boolean,
         context: IContext
     ): Promise<IRepositoryMember> {
+        const repositoryMember = await this.doCreateRepositoryMember(
+            repository,
+            userAccount,
+            isOwner,
+            isAdministrator,
+            canWrite,
+            addRepositoryKey,
+            context
+        )
+
+        await this.addRepositoryMemberInfoToHistory(
+            repositoryMember,
+            true,
+            repository,
+            null,
+            null,
+            null,
+            context
+        )
+
+        return repositoryMember
+    }
+
+    private async doCreateRepositoryMember(
+        repository: IRepository,
+        userAccount: IUserAccount,
+        isOwner: RepositoryMember_IsOwner,
+        isAdministrator: RepositoryMember_IsAdministrator,
+        canWrite: RepositoryMember_CanWrite,
+        addRepositoryKey: boolean,
+        context: IContext
+    ): Promise<IRepositoryMember> {
         let memberPublicSigningKey: RepositoryMember_PublicSigningKey = null
         if (addRepositoryKey) {
             memberPublicSigningKey = await this.keyRingManager.addRepositoryKey(
@@ -202,22 +236,14 @@ export class RepositoryMaintenanceManager
             memberPublicSigningKey
         )
 
-        await this.repositoryMemberDao.insert([repositoryMember], context)
-
-        await this.addRepositoryMemberInfoToHistory(
-            repositoryMember,
-            repository,
-            null,
-            null,
-            null,
-            context
-        )
+        await this.repositoryMemberDao.save(repositoryMember, context)
 
         return repositoryMember
     }
 
     private async addRepositoryMemberInfoToHistory(
         repositoryMember: IRepositoryMember,
+        isInitiatingChange: boolean,
         repository: IRepository,
         repositoryMemberAcceptance: RepositoryMemberAcceptance,
         invitationPrivateSigningKey: RepositoryMemberInvitation_PrivateSigningKey,
@@ -227,21 +253,18 @@ export class RepositoryMaintenanceManager
         const {
             repositoryTransactionHistory,
             transactionHistory
-        } = await this.getRepositoryTransactionHistory(repository, repositoryMember, context)
+        } = await this.getRepositoryTransactionHistory(repository,
+            isInitiatingChange ? repositoryMember : null,
+            context)
         repositoryTransactionHistory.newRepositoryMembers.push(repositoryMember)
-        transactionHistory.allRepositoryMembers.push(repositoryMember)
         if (repositoryMemberAcceptance) {
             repositoryTransactionHistory.newRepositoryMemberAcceptances
                 .push(repositoryMemberAcceptance)
             repositoryTransactionHistory.invitationPrivateSigningKey
                 = invitationPrivateSigningKey
-            transactionHistory.allRepositoryMemberAcceptances
-                .push(repositoryMemberAcceptance)
         }
         if (repositoryMemberInvitation) {
             repositoryTransactionHistory.newRepositoryMemberInvitations
-                .push(repositoryMemberInvitation)
-            transactionHistory.allRepositoryMemberInvitations
                 .push(repositoryMemberInvitation)
         }
     }
