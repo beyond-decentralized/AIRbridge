@@ -9,10 +9,6 @@ export class KeyRing
     extends InternalAirEntity
     implements IKeyRing {
 
-    @Column({ name: "EMAIL", nullable: false })
-    @DbString()
-    email?: KeyRing_Email
-
     @Column({ name: 'EXTERNAL_PRIVATE_KEY', nullable: false })
     @DbString()
     externalPrivateKey?: KeyRing_ExternalPrivateKey
