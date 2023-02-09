@@ -61,6 +61,8 @@ export class SSOManager
         }
         allSessions.push(session)
 
+        context.transaction.actor = this.terminalStore.getFrameworkActor()
+
         const signingKey = await this.keyUtils.getSigningKey(521)
 
         const { userAccount } = await this.userAccountManager

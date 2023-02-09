@@ -2,8 +2,8 @@ import { IContext, Inject, Injected } from "@airport/direction-indicator";
 import { IRepositoryDao, Repository, RepositoryMemberInvitation } from "@airport/holding-pattern/dist/app/bundle";
 import { IKeyRingManager } from "@airbridge/keyring/dist/app/bundle"
 import { IKeyUtils, IRepository, IRepositoryMember, IRepositoryTransactionHistory, ITransactionHistory, IUserAccount, RepositoryMemberInvitation_PrivateSigningKey, RepositoryMemberInvitation_PublicSigningKey, RepositoryMember_CanWrite, RepositoryMember_IsAdministrator, RepositoryMember_IsOwner, RepositoryMember_PublicSigningKey, RepositoryMember_Status, Repository_GUID } from "@airport/ground-control";
-import { RepositoryMember, RepositoryMemberAcceptance , RepositoryMemberDao } from "@airport/holding-pattern/dist/app/bundle";
-import { IHistoryManager, IOperationContext, ITerminalSessionManager } from "@airport/terminal-map";
+import { RepositoryMember, RepositoryMemberAcceptance, RepositoryMemberDao } from "@airport/holding-pattern/dist/app/bundle";
+import { IHistoryManager, IOperationContext, ITerminalSessionManager, ITransaction } from "@airport/terminal-map";
 import { Api } from "@airport/air-traffic-control";
 
 export interface IRepositoryMaintenanceManager {
@@ -225,7 +225,7 @@ export class RepositoryMaintenanceManager
         const {
             repositoryTransactionHistory,
             transactionHistory
-        } = await this.getRepositoryTransactionHistory(repository, context)
+        } = await this.getRepositoryTransactionHistory(repository, repositoryMember, context)
         repositoryTransactionHistory.newRepositoryMembers.push(repositoryMember)
         transactionHistory.allRepositoryMembers.push(repositoryMember)
         if (repositoryMemberAcceptance) {
@@ -246,6 +246,7 @@ export class RepositoryMaintenanceManager
 
     private async getRepositoryTransactionHistory(
         repository: IRepository,
+        repositoryMember: IRepositoryMember,
         context: IContext
     ): Promise<{
         repositoryTransactionHistory: IRepositoryTransactionHistory,
@@ -255,7 +256,7 @@ export class RepositoryMaintenanceManager
         if (!userSession) {
             throw new Error('No User Session present')
         }
-        const transaction = userSession.currentTransaction
+        const transaction: ITransaction = context.transaction
         if (!transaction) {
             throw new Error('No Current Transaction present')
         }
@@ -266,13 +267,14 @@ export class RepositoryMaintenanceManager
 
         const repositoryTransactionHistory = await this
             .historyManager.getRepositoryTransactionHistory(
-                userSession.currentTransaction.transactionHistory,
-                repository._localId, actor, context as IOperationContext
+                transaction.transactionHistory,
+                repository._localId, actor, repositoryMember,
+                context as IOperationContext
             )
 
         return {
             repositoryTransactionHistory,
-            transactionHistory: userSession.currentTransaction.transactionHistory
+            transactionHistory: transaction.transactionHistory
         }
     }
 
