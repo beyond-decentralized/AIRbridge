@@ -59,9 +59,9 @@ export class KeyRingManager
         context: IContext
     ): Promise<IKeyRing> {
         await this.repositoryLoader.loadRepository(
-            'DEVSERVR_' + userPrivateKey, {})
+            'DEVSERVR_' + userPrivateKey, context)
 
-        let keyRing: IKeyRing = await this.keyRingDao.findKeyRing(userPrivateKey)
+        let keyRing: IKeyRing = await this.keyRingDao.findKeyRing(userPrivateKey, context)
 
         if (!keyRing) {
             const keyRingContext = {
