@@ -1,5 +1,5 @@
 import { IContext, Inject, Injected } from "@airport/direction-indicator";
-import { IKeyUtils, SyncRepositoryMessage, Repository_GUID } from "@airport/ground-control";
+import { IKeyUtils, SyncRepositoryMessage, Repository_GUID, Dictionary, IRepositoryTransactionHistory } from "@airport/ground-control";
 import { ITerminalSessionManager } from "@airport/terminal-map";
 import { RepositoryKeyDao } from "../dao/RepositoryKeyDao";
 import { RepositoryKey } from "../ddl/RepositoryKey";
@@ -7,6 +7,7 @@ import { RepositoryKey } from "../ddl/RepositoryKey";
 export interface IMessageSigningManager {
 
     signMessages(
+        historiesToSend: IRepositoryTransactionHistory[],
         unsingedMessages: SyncRepositoryMessage[],
         context: IContext
     ): Promise<void>
@@ -18,6 +19,9 @@ export class MessageSigningManager
     implements IMessageSigningManager {
 
     @Inject()
+    dictionary: Dictionary
+
+    @Inject()
     keyUtils: IKeyUtils
 
     @Inject()
@@ -27,6 +31,7 @@ export class MessageSigningManager
     terminalSessionManager: ITerminalSessionManager
 
     async signMessages(
+        historiesToSend: IRepositoryTransactionHistory[],
         unsingedMessages: SyncRepositoryMessage[],
         context: IContext
     ): Promise<void> {
@@ -36,14 +41,15 @@ export class MessageSigningManager
         }
 
         const repositoryGUIDSet: Set<Repository_GUID> = new Set()
-        for (const unsignedMessage of unsingedMessages) {
-            let repositoryGUID: Repository_GUID
-            if (typeof unsignedMessage.data.history.repository === 'string') {
-                repositoryGUID = unsignedMessage.data.history.repository
-            } else {
-                repositoryGUID = unsignedMessage.data.history.repository.GUID
+        const messagesToSign: SyncRepositoryMessage[] = []
+        for (let i = 0; i < historiesToSend.length; i++) {
+            let history = historiesToSend[i]
+            let unsignedMessage = unsingedMessages[i]
+            if (this.dictionary.isKeyringEntity(history.operationHistory[0].entity)) {
+                continue
             }
-            repositoryGUIDSet.add(repositoryGUID)
+            repositoryGUIDSet.add(history.repository.GUID)
+            messagesToSign.push(unsignedMessage)
         }
 
         const repositoryKeys = await this.repositoryKeyDao
@@ -55,7 +61,7 @@ export class MessageSigningManager
             repositoryKeysByRepositoryGUIDs.set(repositoryKey.repositoryGUID, repositoryKey)
         }
 
-        for (const unsingedMessage of unsingedMessages) {
+        for (const unsingedMessage of messagesToSign) {
             const history = unsingedMessage.data.history
             const repositoryKey = repositoryKeysByRepositoryGUIDs
                 .get(history.repository.GUID)
