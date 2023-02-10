@@ -32,5 +32,7 @@ keyring.setDependencies(KeyRingManager, {
 })
 
 keyring.setDependencies(MessageSigningManager, {
+    keyUtils: KeyUtils,
+    repositoryKeyDao: RepositoryKeyDao,
     terminalSessionManager: TERMINAL_SESSION_MANAGER
 })
