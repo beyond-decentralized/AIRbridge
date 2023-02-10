@@ -23,12 +23,12 @@ export class RepositoryKeyDao extends BaseRepositoryKeyDao {
                 repositoryGUID: Y,
             },
             FROM: [
-                kr = Q_airbridge____at_airbridge_slash_keyring.KeyRing,
-                rk = kr.repositoryKeys.LEFT_JOIN()
+                rk = Q_airbridge____at_airbridge_slash_keyring.RepositoryKey,
+                kr = rk.keyRing.INNER_JOIN()
             ],
             WHERE: AND(
-                kr.internalPrivateSigningKey.equals(internalPrivateSingingKey),
-                rk.repositoryGUID.IN(repositoryGUIDs)
+                rk.repositoryGUID.IN(repositoryGUIDs),
+                kr.internalPrivateSigningKey.equals(internalPrivateSingingKey)
             )
         })
     }

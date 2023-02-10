@@ -36,7 +36,7 @@ export class MessageSigningManager
         const repositoryGUIDSet: Set<Repository_GUID> = new Set()
         for (const unsignedMessage of unsingedMessages) {
             let repositoryGUID: Repository_GUID
-            if(typeof unsignedMessage.data.history.repository === 'string') {
+            if (typeof unsignedMessage.data.history.repository === 'string') {
                 repositoryGUID = unsignedMessage.data.history.repository
             } else {
                 repositoryGUID = unsignedMessage.data.history.repository.GUID
@@ -50,7 +50,7 @@ export class MessageSigningManager
         const repositoryKeysByRepositoryGUIDs: Map<Repository_GUID, RepositoryKey> = new Map()
 
         for (const repositoryKey of repositoryKeys) {
-            repositoryKeysByRepositoryGUIDs.set(repositoryKey.repository.GUID, repositoryKey)
+            repositoryKeysByRepositoryGUIDs.set(repositoryKey.repositoryGUID, repositoryKey)
         }
 
         for (const unsingedMessage of unsingedMessages) {
