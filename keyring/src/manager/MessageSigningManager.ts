@@ -1,4 +1,4 @@
-import { Inject, Injected } from "@airport/direction-indicator";
+import { IContext, Inject, Injected } from "@airport/direction-indicator";
 import { IKeyUtils, SyncRepositoryMessage, Repository_GUID } from "@airport/ground-control";
 import { ITerminalSessionManager } from "@airport/terminal-map";
 import { RepositoryKeyDao } from "../dao/RepositoryKeyDao";
@@ -7,7 +7,8 @@ import { RepositoryKey } from "../ddl/RepositoryKey";
 export interface IMessageSigningManager {
 
     signMessages(
-        unsingedMessages: SyncRepositoryMessage[]
+        unsingedMessages: SyncRepositoryMessage[],
+        context: IContext
     ): Promise<void>
 
 }
@@ -27,6 +28,7 @@ export class MessageSigningManager
 
     async signMessages(
         unsingedMessages: SyncRepositoryMessage[],
+        context: IContext
     ): Promise<void> {
         const keyRing = (await this.terminalSessionManager.getUserSession()).keyRing
         if (!keyRing) {
@@ -46,7 +48,7 @@ export class MessageSigningManager
 
         const repositoryKeys = await this.repositoryKeyDao
             .findByRepositoryGUIDs(keyRing.internalPrivateSigningKey,
-                Array.from(repositoryGUIDSet))
+                Array.from(repositoryGUIDSet), context)
         const repositoryKeysByRepositoryGUIDs: Map<Repository_GUID, RepositoryKey> = new Map()
 
         for (const repositoryKey of repositoryKeys) {

@@ -1,5 +1,5 @@
 import { KeyRing_InternalPrivateSigningKey } from "@airbridge/data-model";
-import { Injected } from "@airport/direction-indicator";
+import { IContext, Injected } from "@airport/direction-indicator";
 import { Repository_GUID } from "@airport/ground-control";
 import { AND, Y } from "@airport/tarmaq-query";
 import { RepositoryKey } from "../ddl/RepositoryKey";
@@ -12,7 +12,8 @@ export class RepositoryKeyDao extends BaseRepositoryKeyDao {
 
     async findByRepositoryGUIDs(
         internalPrivateSingingKey: KeyRing_InternalPrivateSigningKey,
-        repositoryGUIDs: Repository_GUID[]
+        repositoryGUIDs: Repository_GUID[],
+        context: IContext
     ): Promise<RepositoryKey[]> {
         let kr: QKeyRing,
             rk: QRepositoryKey
@@ -30,7 +31,7 @@ export class RepositoryKeyDao extends BaseRepositoryKeyDao {
                 rk.repositoryGUID.IN(repositoryGUIDs),
                 kr.internalPrivateSigningKey.equals(internalPrivateSingingKey)
             )
-        })
+        }, context)
     }
 
 }
