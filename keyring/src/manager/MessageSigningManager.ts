@@ -35,7 +35,13 @@ export class MessageSigningManager
 
         const repositoryGUIDSet: Set<Repository_GUID> = new Set()
         for (const unsignedMessage of unsingedMessages) {
-            repositoryGUIDSet.add(unsignedMessage.data.history.repository.GUID)
+            let repositoryGUID: Repository_GUID
+            if(typeof unsignedMessage.data.history.repository === 'string') {
+                repositoryGUID = unsignedMessage.data.history.repository
+            } else {
+                repositoryGUID = unsignedMessage.data.history.repository.GUID
+            }
+            repositoryGUIDSet.add(repositoryGUID)
         }
 
         const repositoryKeys = await this.repositoryKeyDao
