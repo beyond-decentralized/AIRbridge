@@ -7,6 +7,7 @@ import { IUserAccountManager } from "@airport/travel-document-checkpoint/dist/ap
 import { ISignInAdapter } from "../signIn/SignInAdapter";
 import { UserAccount_Email } from "@airport/aviation-communication";
 import { Api } from "@airport/air-traffic-control";
+import { ActorDao } from "@airport/holding-pattern/dist/app/bundle";
 
 export interface ISSOManager {
 
@@ -24,6 +25,9 @@ export interface ISSOManager {
 @Injected()
 export class SSOManager
     implements ISSOManager {
+
+    @Inject()
+    actorDao: ActorDao
 
     @Inject()
     keyUtils: IKeyUtils
@@ -69,6 +73,9 @@ export class SSOManager
             .addUserAccount(userAccountInfo.username,
                 signingKey.public, context)
         session.userAccount = userAccount
+        context.transaction.actor.userAccount = userAccount
+        await this.actorDao.updateUserAccount(userAccount,
+            context.transaction.actor, context)
 
         // FIXME: replace with passed in key
         const userPrivateKey = await this.keyUtils.getEncryptionKey()
@@ -93,6 +100,7 @@ export class SSOManager
     async login(
         userAccount: IUserAccountInfo
     ): Promise<void> {
+        // context.transaction.actor.userAccount = userAccount
         throw new Error(`Implement`);
     }
 

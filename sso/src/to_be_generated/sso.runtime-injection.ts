@@ -1,7 +1,7 @@
 import { KeyRingManager } from '@airbridge/keyring/dist/app/bundle'
 import { app } from '@airport/direction-indicator'
 import { KeyUtils } from '@airport/ground-control'
-import { RepositoryDao, RepositoryMemberDao } from '@airport/holding-pattern/dist/app/bundle'
+import { ActorDao, RepositoryDao, RepositoryMemberDao } from '@airport/holding-pattern/dist/app/bundle'
 import { HISTORY_MANAGER, TerminalStore, TERMINAL_SESSION_MANAGER, UserStore } from '@airport/terminal-map'
 import { UserAccountManager } from '@airport/travel-document-checkpoint/dist/app/bundle'
 import { RepositoryMaintenanceManager } from '../api/RepositoryMaintenanceManager'
@@ -22,6 +22,7 @@ sso.setDependencies(RepositoryMaintenanceManager, {
 })
 
 sso.setDependencies(SSOManager, {
+    actorDao: ActorDao,
     keyUtils: KeyUtils,
     keyRingManager: KeyRingManager,
     // signInAdapter: ISignInAdapter,
