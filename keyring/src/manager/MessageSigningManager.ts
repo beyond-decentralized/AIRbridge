@@ -43,13 +43,20 @@ export class MessageSigningManager
         const repositoryGUIDSet: Set<Repository_GUID> = new Set()
         const messagesToSign: SyncRepositoryMessage[] = []
         for (let i = 0; i < historiesToSend.length; i++) {
-            let history = historiesToSend[i]
-            let unsignedMessage = unsingedMessages[i]
-            if (this.dictionary.isKeyringEntity(history.operationHistory[0].entity)) {
+            const history = historiesToSend[i]
+            const unsignedMessage = unsingedMessages[i]
+            // Operation history may not be present if its
+            // a RepositoryMember-only operation
+            const firstOperationHistory = history.operationHistory[0]
+            if (firstOperationHistory && this.dictionary.isKeyringEntity(firstOperationHistory.entity)) {
                 continue
             }
             repositoryGUIDSet.add(history.repository.GUID)
             messagesToSign.push(unsignedMessage)
+        }
+
+        if (!messagesToSign.length) {
+            return
         }
 
         const repositoryKeys = await this.repositoryKeyDao
@@ -63,8 +70,15 @@ export class MessageSigningManager
 
         for (const unsingedMessage of messagesToSign) {
             const history = unsingedMessage.data.history
+            let repositoryGUID: Repository_GUID
+            if (typeof history.repository === 'string') {
+                repositoryGUID = history.repository
+            } else {
+                repositoryGUID = history.repository.GUID
+            }
+
             const repositoryKey = repositoryKeysByRepositoryGUIDs
-                .get(history.repository.GUID)
+                .get(repositoryGUID)
             const contents = JSON.stringify(unsingedMessage)
 
             unsingedMessage.memberSignature = await this.keyUtils
@@ -76,7 +90,7 @@ export class MessageSigningManager
             }
             if (history.invitationPrivateSigningKey || history.isRepositoryCreation) {
                 unsingedMessage.userAccountSignature = await this.keyUtils
-                    .sign(contents, keyRing.internalPrivateSigningKey)
+                    .sign(contents, keyRing.internalPrivateSigningKey, 521)
             }
         }
     }
