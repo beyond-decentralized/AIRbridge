@@ -83,8 +83,6 @@ export class SSOManager
         const keyRing = await this.keyRingManager.getKeyRing(
             userPrivateKey, signingKey.private, context)
 
-        session.keyRing = keyRing
-
         const sessionMapByAccountPublicSigningKey = this.userStore
             .getSessionMapByAccountPublicSigningKey()
         sessionMapByAccountPublicSigningKey.set(
