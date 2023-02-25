@@ -1,6 +1,15 @@
 import { airportApi, DbApplication, IRepository, IUserAccountInfo } from '@airport/server'
 import { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 
+let latestRepositories: IRepository[] = []
+let setRepositoriesCallback: (repositories: IRepository[]) => void
+airportApi.getRepositories().subscribe(repositories => {
+    if (setRepositoriesCallback) {
+        setRepositoriesCallback(repositories)
+    }
+    latestRepositories = repositories
+})
+
 export function signUp(
     ev: CustomEvent<OverlayEventDetail>,
     showMessage: (message: string, duration: number) => void
@@ -29,52 +38,23 @@ async function getApplicationsAsync(
 }
 
 export async function getRepositories(
-    setRepositories: (repositories: IRepository[]) => void,
-    showMessage: (message: string, duration: number) => void
+    setRepositories: (repositories: IRepository[]) => void
 ): Promise<void> {
-    try {
-        const repositories = await airportApi.getRootRepositories()
-        setRepositories(repositories)
-    } catch (e) {
-        console.error(e)
-        showMessage('Error retrieving Root Repositories', 10000)
-    }
+    setRepositoriesCallback = setRepositories
+    setRepositories(latestRepositories)
 }
 
 export async function getRepository(
     repositoryId: string,
     setRepository: (repository: IRepository) => void,
-    setReferencedRepositories: (repositoryGroups: IRepository[]) => void,
     showMessage: (message: string, duration: number) => void
 ) {
     try {
         const repository = await airportApi.getRepository(repositoryId)
         setRepository(repository)
-        getReferencedRepositories(repository, setReferencedRepositories,
-            showMessage)
     } catch (e) {
         console.error(e)
         showMessage('Error retrieving Repository', 10000)
-    }
-}
-
-function getReferencedRepositories(
-    repository: IRepository,
-    setReferencedRepositories: (repositoryGroups: IRepository[]) => void,
-    showMessage: (message: string, duration: number) => void
-): void {
-    try {
-        // const referencedRepositories = repository.references.map(
-        //     reference => reference.referencedRepository
-        // ).sort((a, b) => {
-        //     if (a.name > b.name) return 1;
-        //     if (a.name < b.name) return -1;
-        //     return 0;
-        // })
-        // setReferencedRepositories(referencedRepositories)
-    } catch (e) {
-        console.error(e)
-        showMessage('Error getting Referenced Repositories', 10000)
     }
 }
 

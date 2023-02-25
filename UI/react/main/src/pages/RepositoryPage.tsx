@@ -10,7 +10,6 @@ const RepositoryPage: React.FC = () => {
 
   const { repositoryId } = useParams<{ repositoryId: string; }>();
   const [repository, setRepository] = useState<IRepository>(() => null as any)
-  const [referencedRepositories, setReferencedRepositories] = useState<IRepository[]>(() => [])
   const [present, dismiss] = useIonToast()
 
   function showToast(
@@ -27,60 +26,71 @@ const RepositoryPage: React.FC = () => {
     getRepository(
       repositoryId,
       setRepository,
-      setReferencedRepositories,
       showToast
     ).then()
   }, [repositoryId])
-
-  let repositoryGroupsFragment
-  if (referencedRepositories && referencedRepositories.length) {
-    repositoryGroupsFragment =
-      <IonAccordionGroup>
-        {referencedRepositories.map((repositoryGroup, groupIndex) =>
-          <IonAccordion
-            key={'repositoryGroup' + groupIndex}
-            value={repositoryGroup.name}
-          >
-            <IonItem slot="header" color="light">
-              <IonLabel>{repositoryGroup.name}</IonLabel>
-            </IonItem>
-            <div className="ion-padding" slot="content">
-              {referencedRepositories.map((referencedRepository, nestingIndex) =>
-                <IonItem
-                  color="light"
-                  key={nestingIndex}
-                  slot="header"
-                >
-                  <IonLabel>{referencedRepository.name}</IonLabel>
-                  <IonButton
-                    routerLink={'/repository/' + referencedRepository.GUID}
-                    fill="clear"
-                  >
-                    <IonIcon slot="start" icon={documentOutline}></IonIcon>
-                    Details
-                  </IonButton>
-                </IonItem>
-              )}
-            </div>
-          </IonAccordion>
-        )}
-      </IonAccordionGroup>
-  } else {
-    repositoryGroupsFragment =
-      <IonItem>
-        No Nested Repositories found
-      </IonItem>
-  }
 
   let repositoryFragment
   if (!repository) {
     repositoryFragment =
       <IonItem>Loading ...</IonItem>
   } else {
+    let referencedRepositoriesFragment
+    if (repository.referencedRepositories && repository.referencedRepositories.length) {
+      referencedRepositoriesFragment =
+        repository.referencedRepositories.map((repositoryReference, referenceIndex) =>
+          <IonItem
+            color="light"
+            key={referenceIndex}
+            slot="header"
+          >
+            <IonLabel>{repositoryReference.referencedRepository.name}</IonLabel>
+            <IonButton
+              routerLink={'/repository/' + repositoryReference.referencedRepository.GUID}
+              fill="clear"
+            >
+              <IonIcon slot="start" icon={documentOutline}></IonIcon>
+              Details
+            </IonButton>
+          </IonItem>
+        )
+    } else {
+      referencedRepositoriesFragment =
+        <IonItem>
+          No Referenced Repositories found
+        </IonItem>
+    }
+
+    let referencedInRepositoriesFragment
+    if (repository.referencedInRepositories && repository.referencedInRepositories.length) {
+      referencedInRepositoriesFragment =
+        repository.referencedInRepositories.map((repositoryReference, referenceIndex) =>
+          <IonItem
+            color="light"
+            key={referenceIndex}
+            slot="header"
+          >
+            <IonLabel>{repositoryReference.referencingRepository.name}</IonLabel>
+            <IonButton
+              routerLink={'/repository/' + repositoryReference.referencingRepository.GUID}
+              fill="clear"
+            >
+              <IonIcon slot="start" icon={documentOutline}></IonIcon>
+              Details
+            </IonButton>
+          </IonItem>
+        )
+    } else {
+      referencedInRepositoriesFragment =
+        <IonItem>
+          No Repositories with references to this Repository found
+        </IonItem>
+    }
+
     repositoryFragment =
       <>
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton onClick={e => getRepository(repositoryId, setRepository, setReferencedRepositories, present)}>
+          <IonFabButton onClick={e => getRepository(repositoryId, setRepository, present)}>
             <IonIcon icon={refresh} />
           </IonFabButton>
         </IonFab>
@@ -97,7 +107,25 @@ const RepositoryPage: React.FC = () => {
           <IonIcon slot="start" icon={eyeOutline}></IonIcon>
           View
         </IonButton>
-        {repositoryGroupsFragment}
+
+        <IonAccordionGroup>
+          <IonAccordion value="first">
+            <IonItem slot="header" color="light">
+              <IonLabel>References</IonLabel>
+            </IonItem>
+            <div className="ion-padding" slot="content">
+              {referencedRepositoriesFragment}
+            </div>
+          </IonAccordion>
+          <IonAccordion value="second">
+            <IonItem slot="header" color="light">
+              <IonLabel>Referenced In</IonLabel>
+            </IonItem>
+            <div className="ion-padding" slot="content">
+              {referencedInRepositoriesFragment}
+            </div>
+          </IonAccordion>
+        </IonAccordionGroup>
       </>
   }
 

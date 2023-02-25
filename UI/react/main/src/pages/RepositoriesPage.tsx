@@ -7,10 +7,9 @@ import './RepositoriesPage.css';
 
 const RepositoriesPage: React.FC = () => {
   const [repositories, setRepositories] = useState<IRepository[]>(() => null as any)
-  const [present] = useIonToast()
 
   useEffect(() => {
-    getRepositories(setRepositories, present).then()
+    getRepositories(setRepositories).then()
   }, [])
 
   let repositoriesFragment
@@ -69,7 +68,7 @@ const RepositoriesPage: React.FC = () => {
       </IonHeader>
       <IonContent fullscreen>
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton onClick={e => getRepositories(setRepositories, present)}>
+          <IonFabButton onClick={e => getRepositories(setRepositories)}>
             <IonIcon icon={refresh} />
           </IonFabButton>
         </IonFab>

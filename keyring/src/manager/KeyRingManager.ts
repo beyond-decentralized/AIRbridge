@@ -78,7 +78,7 @@ export class KeyRingManager
             userSession.keyRing = keyRing
 
             const repository = await this.repositoryManager
-                .createRepository('Key ring', false, keyRingContext)
+                .createRepository('Key ring', true, false, keyRingContext)
             keyRing.repository = repository
 
             await this.keyRingDao.save(keyRing, keyRingContext)
