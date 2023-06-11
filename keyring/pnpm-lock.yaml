@@ -1,0 +1,86 @@
+lockfileVersion: '6.0'
+
+dependencies:
+  '@airbridge/data-model':
+    specifier: workspace:../data-model
+    version: link:../data-model
+  '@airbridge/validate':
+    specifier: workspace:../validate
+    version: link:../validate
+  '@airport/air-traffic-control':
+    specifier: workspace:../../AIRport/apis/air-traffic-control
+    version: link:../../AIRport/apis/air-traffic-control
+  '@airport/airgate':
+    specifier: workspace:../../AIRport/libs/airgate
+    version: link:../../AIRport/libs/airgate
+  '@airport/autopilot':
+    specifier: workspace:../../AIRport/libs/autopilot
+    version: link:../../AIRport/libs/autopilot
+  '@airport/direction-indicator':
+    specifier: workspace:../../AIRport/libs/direction-indicator
+    version: link:../../AIRport/libs/direction-indicator
+  '@airport/ground-control':
+    specifier: workspace:../../AIRport/apis/ground-control
+    version: link:../../AIRport/apis/ground-control
+  '@airport/holding-pattern':
+    specifier: workspace:../../AIRport/schemas/holding-pattern
+    version: link:../../AIRport/schemas/holding-pattern
+  '@airport/tarmaq-dao':
+    specifier: workspace:../../AIRport/ORMs/tarmaq/dao
+    version: link:../../AIRport/ORMs/tarmaq/dao
+  '@airport/tarmaq-entity':
+    specifier: workspace:../../AIRport/ORMs/tarmaq/entity
+    version: link:../../AIRport/ORMs/tarmaq/entity
+  '@airport/tarmaq-query':
+    specifier: workspace:../../AIRport/ORMs/tarmaq/query
+    version: link:../../AIRport/ORMs/tarmaq/query
+  '@airport/terminal-map':
+    specifier: workspace:../../AIRport/apis/terminal-map
+    version: link:../../AIRport/apis/terminal-map
+  rxjs:
+    specifier: workspace:../../node_modules/rxjs
+    version: link:../../node_modules/rxjs
+  uuid:
+    specifier: workspace:../../node_modules/uuid
+    version: link:../../node_modules/uuid
+
+devDependencies:
+  '@airport/runway':
+    specifier: workspace:../../AIRport/generators/runway
+    version: link:../../AIRport/generators/runway
+  '@airport/taxiway':
+    specifier: workspace:../../AIRport/generators/taxiway
+    version: link:../../AIRport/generators/taxiway
+  '@rollup/plugin-commonjs':
+    specifier: workspace:../../node_modules/@rollup/plugin-commonjs
+    version: link:../../node_modules/@rollup/plugin-commonjs
+  '@rollup/plugin-node-resolve':
+    specifier: workspace:../../node_modules/@rollup/plugin-node-resolve
+    version: link:../../node_modules/@rollup/plugin-node-resolve
+  rollup:
+    specifier: workspace:../../node_modules/rollup
+    version: link:../../node_modules/rollup
+  rollup-plugin-dts:
+    specifier: workspace:../../node_modules/rollup-plugin-dts
+    version: link:../../node_modules/rollup-plugin-dts
+  rollup-plugin-peer-deps-external:
+    specifier: workspace:../../node_modules/rollup-plugin-peer-deps-external
+    version: link:../../node_modules/rollup-plugin-peer-deps-external
+  rollup-plugin-terser:
+    specifier: workspace:../../node_modules/rollup-plugin-terser
+    version: link:../../node_modules/rollup-plugin-terser
+  rollup-plugin-typescript2:
+    specifier: workspace:../../node_modules/rollup-plugin-typescript2
+    version: link:../../node_modules/rollup-plugin-typescript2
+  ts-node:
+    specifier: workspace:../../node_modules/ts-node
+    version: link:../../node_modules/ts-node
+  ts-patch:
+    specifier: workspace:../../node_modules/ts-patch
+    version: link:../../node_modules/ts-patch
+  tslib:
+    specifier: workspace:../../node_modules/tslib
+    version: link:../../node_modules/tslib
+  typescript:
+    specifier: workspace:../../node_modules/typescript
+    version: link:../../node_modules/typescript
