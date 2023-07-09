@@ -16,10 +16,7 @@ const UIsPage: React.FC = () => {
             <IonTitle size="large">UIs</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <ExploreContainer
-          name="User Interfaces"
-        >
-          <div>TODO: implement tracking of User Interfaces</div>
+        <ExploreContainer>
         </ExploreContainer>
       </IonContent>
     </IonPage>

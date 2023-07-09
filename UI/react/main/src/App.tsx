@@ -1,4 +1,4 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, useLocation } from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
@@ -32,16 +32,25 @@ import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
+
 import { useIonToast } from '@ionic/react';
 
 /* Theme variables */
 import './theme/variables.css';
 import { signUp } from './api'
+import UIPage from './pages/UIPage';
 
 setupIonicReact();
 
 const App: React.FC = () => {
   const [present] = useIonToast()
+  const location = useLocation()
+
+  let hideTabBarClassName = ''
+  if(location && location.pathname.startsWith('/ui')) {
+    hideTabBarClassName = 'hide-tab-bar'
+  }
+  
 
   return (
     <IonApp>
@@ -67,8 +76,11 @@ const App: React.FC = () => {
             <Route exact path="/">
               <Redirect to="/rootRepositories" />
             </Route>
+            <Route exact path="/ui">
+              <UIPage />
+            </Route>
           </IonRouterOutlet>
-          <IonTabBar slot="bottom">
+          <IonTabBar className={hideTabBarClassName} slot="bottom">
             <IonTabButton tab="repositories" href="/rootRepositories">
               <IonIcon icon={briefcase} />
               <IonLabel>Repositories</IonLabel>
@@ -77,9 +89,17 @@ const App: React.FC = () => {
               <IonIcon icon={apps} />
               <IonLabel>Apps</IonLabel>
             </IonTabButton>
+            {/*
+            Need to implement search for user interfaces based on the
+            schemas of the currently loaded repositories
             <IonTabButton tab="user-interfaces" href="/user-interfaces">
               <IonIcon icon={desktop} />
               <IonLabel>UIs</IonLabel>
+            </IonTabButton>
+  */}
+            <IonTabButton tab="curret-user-interface" href="/ui">
+              <IonIcon icon={desktop} />
+              <IonLabel>UI</IonLabel>
             </IonTabButton>
           </IonTabBar>
         </IonTabs>

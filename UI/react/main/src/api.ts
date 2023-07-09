@@ -3,7 +3,9 @@ import { OverlayEventDetail } from '@ionic/react/dist/types/components/react-com
 
 let latestRepositories: IRepository[] = []
 let setRepositoriesCallback: (repositories: IRepository[]) => void
-airportApi.getRepositories().subscribe(repositories => {
+airportApi.getRepositories().subscribe((
+    repositories: IRepository[]
+) => {
     if (setRepositoriesCallback) {
         setRepositoriesCallback(repositories)
     }
