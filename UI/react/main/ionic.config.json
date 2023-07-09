@@ -1,8 +1,7 @@
 {
-  "name": "AIRport-web-ui",
+  "name": "Turbase",
   "integrations": {
     "capacitor": {}
   },
-  "type": "react",
-  "id": "59d4c870"
+  "type": "react-vite"
 }

@@ -166,7 +166,7 @@ export class RepositoryMaintenanceManager
             context
         )
 
-        const joinUrl = `https://localhost:3000/joinRepository/${repository.GUID}/${base64EncodedKeyInvitationPublicSigningKey}/${base64EncodedKeyInvitationPrivateSigningKey}`
+        const joinUrl = `https://localhost:5173/joinRepository/${repository.GUID}/${base64EncodedKeyInvitationPublicSigningKey}/${base64EncodedKeyInvitationPrivateSigningKey}`
 
         await this.sendEmail(userEmail,
             `Join '${repository.name}' on Turbase`, joinUrl)
