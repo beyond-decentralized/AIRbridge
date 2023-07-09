@@ -5,8 +5,10 @@ import dts from "rollup-plugin-dts";
 import postcss from "rollup-plugin-postcss";
 import { terser } from "rollup-plugin-terser";
 import peerDepsExternal from 'rollup-plugin-peer-deps-external';
+import Fs from 'fs/promises';
 
-const packageJson = require("./package.json");
+const json = await Fs.readFile('./package.json');
+const packageJson = JSON.parse(json);
 
 export default [
     {

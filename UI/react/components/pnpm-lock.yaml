@@ -1,0 +1,92 @@
+lockfileVersion: '6.0'
+
+dependencies:
+  '@capacitor/app':
+    specifier: workspace:../../../../node_modules/@capacitor/app
+    version: link:../../../../node_modules/@capacitor/app
+  '@capacitor/core':
+    specifier: workspace:../../../../node_modules/@capacitor/core
+    version: link:../../../../node_modules/@capacitor/core
+  '@capacitor/haptics':
+    specifier: workspace:../../../../node_modules/@capacitor/haptics
+    version: link:../../../../node_modules/@capacitor/haptics
+  '@capacitor/keyboard':
+    specifier: workspace:../../../../node_modules/@capacitor/keyboard
+    version: link:../../../../node_modules/@capacitor/keyboard
+  '@capacitor/status-bar':
+    specifier: workspace:../../../../node_modules/@capacitor/status-bar
+    version: link:../../../../node_modules/@capacitor/status-bar
+  '@ionic/core':
+    specifier: workspace:../../../../node_modules/@ionic/core
+    version: link:../../../../node_modules/@ionic/core
+  '@ionic/react':
+    specifier: workspace:../../../../node_modules/@ionic/react
+    version: link:../../../../node_modules/@ionic/react
+  '@ionic/react-router':
+    specifier: workspace:../../../../node_modules/@ionic/react-router
+    version: link:../../../../node_modules/@ionic/react-router
+  '@types/jest':
+    specifier: workspace:../../../../node_modules/@types/jest
+    version: link:../../../../node_modules/@types/jest
+  '@types/node':
+    specifier: workspace:../../../../node_modules/@types/node
+    version: link:../../../../node_modules/@types/node
+  '@types/react':
+    specifier: workspace:../../../../node_modules/@types/react
+    version: link:../../../../node_modules/@types/react
+  '@types/react-dom':
+    specifier: workspace:../../../../node_modules/@types/react-dom
+    version: link:../../../../node_modules/@types/react-dom
+  '@types/react-router':
+    specifier: workspace:../../../../node_modules/@types/react-router
+    version: link:../../../../node_modules/@types/react-router
+  '@types/react-router-dom':
+    specifier: workspace:../../../../node_modules/@types/react-router-dom
+    version: link:../../../../node_modules/@types/react-router-dom
+  ionicons:
+    specifier: workspace:../../../../node_modules/ionicons
+    version: link:../../../../node_modules/ionicons
+  react:
+    specifier: workspace:../../../../node_modules/react
+    version: link:../../../../node_modules/react
+  react-dom:
+    specifier: workspace:../../../../node_modules/react-dom
+    version: link:../../../../node_modules/react-dom
+  react-router:
+    specifier: workspace:../../../../node_modules/react-router
+    version: link:../../../../node_modules/react-router
+  react-router-dom:
+    specifier: workspace:../../../../node_modules/react-router-dom
+    version: link:../../../../node_modules/react-router-dom
+
+devDependencies:
+  '@capacitor/cli':
+    specifier: workspace:../../../../node_modules/@capacitor/cli
+    version: link:../../../../node_modules/@capacitor/cli
+  '@rollup/plugin-commonjs':
+    specifier: workspace:../../../../node_modules/@rollup/plugin-
+    version: link:../../../../node_modules/@rollup/plugin-
+  '@rollup/plugin-node-resolve':
+    specifier: workspace:../../../../node_modules/@rollup/plugin-node-resolve
+    version: link:../../../../node_modules/@rollup/plugin-node-resolve
+  '@rollup/plugin-typescript':
+    specifier: workspace:../../../../node_modules/@rollup/plugin-typescript
+    version: link:../../../../node_modules/@rollup/plugin-typescript
+  rollup:
+    specifier: workspace:../../../../node_modules/rollup
+    version: link:../../../../node_modules/rollup
+  rollup-plugin-dts:
+    specifier: workspace:../../../../node_modules/rollup-plugin-dts
+    version: link:../../../../node_modules/rollup-plugin-dts
+  rollup-plugin-peer-deps-external:
+    specifier: workspace:../../../../node_modules/rollup-plugin-peer-deps-external
+    version: link:../../../../node_modules/rollup-plugin-peer-deps-external
+  rollup-plugin-postcss:
+    specifier: workspace:../../../../node_modules/rollup-plugin-postcss
+    version: link:../../../../node_modules/rollup-plugin-postcss
+  rollup-plugin-terser:
+    specifier: workspace:../../../../node_modules/rollup-plugin-terser
+    version: link:../../../../node_modules/rollup-plugin-terser
+  typescript:
+    specifier: workspace:../../../../node_modules/typescript
+    version: link:../../../../node_modules/typescript
