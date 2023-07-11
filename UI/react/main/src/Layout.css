@@ -1,3 +1,11 @@
 .hide-tab-bar {
     display: none;
 }
+
+.turbase-button {
+    position: fixed;
+    right: -40px;
+    top: -38px;
+    width: 80px;
+    z-index: 10;
+}
