@@ -44,6 +44,7 @@
     "eslint": "workspace:../../../../node_modules/eslint",
     "eslint-plugin-react": "workspace:../../../../node_modules/eslint-plugin-react",
     "jsdom": "workspace:../../../../node_modules/jsdom",
+    "rollup-plugin-delete": "workspace:../../../node_modules/rollup-plugin-delete",
     "sql.js": "../../../../node_modules/sql.js",
     "typescript": "workspace:../../../../node_modules/typescript",
     "vite": "workspace:../../../../node_modules/vite",
