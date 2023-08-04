@@ -1,14 +1,15 @@
-import resolve from "@rollup/plugin-node-resolve";
-import commonjs from "@rollup/plugin-commonjs";
-import typescript from "@rollup/plugin-typescript";
-import dts from "rollup-plugin-dts";
-import postcss from "rollup-plugin-postcss";
-import { terser } from "rollup-plugin-terser";
-import peerDepsExternal from 'rollup-plugin-peer-deps-external';
-import Fs from 'fs/promises';
+import resolve from "@rollup/plugin-node-resolve"
+import commonjs from "@rollup/plugin-commonjs"
+import typescript from "@rollup/plugin-typescript"
+import dts from "rollup-plugin-dts"
+import postcss from "rollup-plugin-postcss"
+import { terser } from "rollup-plugin-terser"
+import peerDepsExternal from 'rollup-plugin-peer-deps-external'
+import Fs from 'fs/promises'
+import del from 'rollup-plugin-delete'
 
-const json = await Fs.readFile('./package.json');
-const packageJson = JSON.parse(json);
+const json = await Fs.readFile('./package.json')
+const packageJson = JSON.parse(json)
 
 export default [
     {
@@ -26,6 +27,7 @@ export default [
             },
         ],
         plugins: [
+            del({ targets: 'dist/*' }),
             peerDepsExternal(),
             resolve(),
             commonjs(),
@@ -40,4 +42,4 @@ export default [
         plugins: [dts()],
         external: [/\.css$/],
     },
-];
+]
