@@ -2,10 +2,14 @@
     display: none;
 }
 
-.turbase-button {
+.turbase-button-wrapper {
     position: fixed;
-    right: -40px;
-    top: -38px;
-    width: 80px;
+    text-align: center;
+    top: -20px;
+    width: 100%;
     z-index: 10;
+}
+
+.turbase-button {
+    width: 40px;
 }

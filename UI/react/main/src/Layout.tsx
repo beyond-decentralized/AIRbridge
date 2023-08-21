@@ -21,17 +21,19 @@ import './Layout.css';
 
 const Layout: React.FC = () => {
     const history = useHistory()
+    // Must be done in a component that is nested inside <IonReactRouter>
     const location = useLocation()
-    const [hideTabBar, setHideTabBar] = useState<boolean>()
+    const [isHideTabBar, setIsHideTabBar] = useState<boolean>()
+    const [uiUrl] = useState<string>()
 
     let hideTabBarClassName = ''
-    if (hideTabBar) {
+    if (isHideTabBar) {
         hideTabBarClassName = 'hide-tab-bar'
     }
 
     useEffect(() => {
-        let hideTabBar = location.pathname.startsWith('/ui')
-        setHideTabBar(hideTabBar)
+        let isHideTabBar = location.pathname.startsWith('/ui/')
+        setIsHideTabBar(isHideTabBar)
     }, [location]);
 
     function handleTurbaseLogoClick() {
@@ -40,11 +42,14 @@ const Layout: React.FC = () => {
 
     return (
         <>
-            {hideTabBar && <img
+            {isHideTabBar && <div
+                className="turbase-button-wrapper"
+            ><img
                 className="turbase-button"
                 onClick={handleTurbaseLogoClick}
                 src="assets/turbase-turbine.png"
-            ></img>}
+            ></img>
+            </div>}
             <IonTabs>
                 <IonRouterOutlet>
                     <Route exact path="/rootRepositories">
@@ -62,7 +67,7 @@ const Layout: React.FC = () => {
                     <Route exact path="/">
                         <Redirect to="/rootRepositories" />
                     </Route>
-                    <Route exact path="/ui">
+                    <Route exact path="/ui/:uiUrl+">
                         <UIPage />
                     </Route>
                 </IonRouterOutlet>
@@ -83,7 +88,7 @@ const Layout: React.FC = () => {
     <IonLabel>UIs</IonLabel>
   </IonTabButton>
 */}
-                    <IonTabButton tab="curret-user-interface" href="/ui">
+                    <IonTabButton tab="curret-user-interface" href={'/ui/' + uiUrl}>
                         <IonIcon icon={desktop} />
                         <IonLabel>UI</IonLabel>
                     </IonTabButton>

@@ -25,24 +25,38 @@ import { useIonToast } from '@ionic/react';
 
 /* Theme variables */
 import './theme/variables.css';
-import { signUp } from './api'
+import { CurrentUiStateContext, ICurrentUiState, IUiState, UiStateContext, dispatchers, signUp, theCurrentUiState, theUiState } from './api'
 import Layout from './Layout'
+import { useEffect, useState } from 'react';
 
 setupIonicReact();
 
 const App: React.FC = () => {
   const [present] = useIonToast()
 
+  const [uiState, setUiState] = useState<IUiState>(() => theUiState)
+  const [currentUiState, setCurrentUiState] = useState<ICurrentUiState>(() => theCurrentUiState)
+
+  useEffect(() => {
+    dispatchers.setCurrentUiState = setCurrentUiState
+    dispatchers.setUiState = setUiState
+  }, [])
+
   return (
-    <IonApp>
-      <AirLoginModal
-        onWillDismiss={e => signUp(e, present)}
-        triggerId="bogus"
-      />
-      <IonReactRouter>
-        <Layout></Layout>
-      </IonReactRouter>
-    </IonApp>)
+    <UiStateContext.Provider value={uiState}>
+      <CurrentUiStateContext.Provider value={currentUiState}>
+        <IonApp>
+          <AirLoginModal
+            onWillDismiss={e => signUp(e, present)}
+            triggerId="bogus"
+          />
+          <IonReactRouter>
+            <Layout></Layout>
+          </IonReactRouter>
+        </IonApp>
+      </CurrentUiStateContext.Provider>
+    </UiStateContext.Provider>
+  )
 }
 
 export default App;

@@ -29,7 +29,9 @@
     "react": "workspace:../../../../node_modules/react",
     "react-dom": "workspace:../../../../node_modules/react-dom",
     "react-router": "workspace:../../../../node_modules/react-router",
-    "react-router-dom": "workspace:../../../../node_modules/react-router-dom"
+    "react-router-dom": "workspace:../../../../node_modules/react-router-dom",
+    "rxjs": "workspace:../../../../node_modules/rxjs",
+    "rxjs-use-hooks": "workspace:../../../../node_modules/rxjs-use-hooks"
   },
   "devDependencies": {
     "@capacitor/cli": "workspace:../../../../node_modules/@capacitor/cli",

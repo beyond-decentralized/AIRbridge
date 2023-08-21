@@ -1,5 +1,35 @@
 import { airportApi, DbApplication, IRepository, IUserAccountInfo } from '@airport/server'
 import { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
+import { createContext } from 'react';
+
+export interface IUiState {
+    isLoggedIn: boolean
+}
+
+export interface ICurrentUiState {
+    currentUiUrl: string
+    iframe: HTMLIFrameElement
+}
+
+export const theUiState: IUiState = {
+    isLoggedIn: false
+}
+export const theCurrentUiState: ICurrentUiState = {
+    currentUiUrl: '',
+    iframe: null as any
+}
+export const UiStateContext = createContext<IUiState>(theUiState);
+export const CurrentUiStateContext = createContext<ICurrentUiState>(theCurrentUiState);
+
+export interface IUiDispatchers {
+    setCurrentUiState: React.Dispatch<React.SetStateAction<ICurrentUiState>>
+    setUiState: React.Dispatch<React.SetStateAction<IUiState>>
+}
+
+export const dispatchers: IUiDispatchers = {
+    setCurrentUiState: null as any,
+    setUiState: null as any
+}
 
 let latestRepositories: IRepository[] = []
 let setRepositoriesCallback: (repositories: IRepository[]) => void
@@ -70,6 +100,10 @@ async function asyncSignUp(
     }
     try {
         await airportApi.signUp(action, userAccountInfo)
+        theUiState.isLoggedIn = true
+        dispatchers.setUiState({
+            ...theUiState
+        })
     } catch (e) {
         let message = e
         if (e instanceof Error) {
