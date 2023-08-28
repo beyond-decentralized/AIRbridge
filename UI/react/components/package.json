@@ -25,17 +25,9 @@
     "react-router-dom": "workspace:../../../../node_modules/react-router-dom"
   },
   "devDependencies": {
+    "@airport/taxiway": "workspace:../../../../AIRport/generators/taxiway",
     "@capacitor/cli": "workspace:../../../../node_modules/@capacitor/cli",
-    "@rollup/plugin-commonjs": "workspace:../../../../node_modules/@rollup/plugin-",
-    "@rollup/plugin-node-resolve": "workspace:../../../../node_modules/@rollup/plugin-node-resolve",
-    "@rollup/plugin-typescript": "workspace:../../../../node_modules/@rollup/plugin-typescript",
-    "rollup": "workspace:../../../../node_modules/rollup",
-    "rollup-plugin-delete": "workspace:../../../node_modules/rollup-plugin-delete",
-    "rollup-plugin-dts": "workspace:../../../../node_modules/rollup-plugin-dts",
-    "rollup-plugin-peer-deps-external": "workspace:../../../../node_modules/rollup-plugin-peer-deps-external",
-    "rollup-plugin-postcss": "workspace:../../../../node_modules/rollup-plugin-postcss",
-    "rollup-plugin-terser": "workspace:../../../../node_modules/rollup-plugin-terser",
-    "typescript": "workspace:../../../../node_modules/typescript"
+    "rollup": "workspace:../../../../node_modules/rollup"
   },
   "eslintConfig": {
     "extends": [
@@ -49,7 +41,9 @@
     "dist"
   ],
   "scripts": {
-    "build": "rollup -c"
+    "build": "rollup -c ./rollup.config.mjs",
+    "clean-build": "rollup -c ./rollup.config.mjs --config-clean",
+    "dev": "rollup -c ./rollup.config.mjs -w"
   },
   "types": "dist/index.d.ts"
 }

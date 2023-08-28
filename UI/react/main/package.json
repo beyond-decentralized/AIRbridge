@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "clean": "rimraf dist",
+    "clean-build": "rimraf dist && tsc && vite build",
     "preview": "vite preview",
     "test.e2e": "cypress run",
     "test.unit": "vitest",
@@ -30,6 +32,7 @@
     "react-dom": "workspace:../../../../node_modules/react-dom",
     "react-router": "workspace:../../../../node_modules/react-router",
     "react-router-dom": "workspace:../../../../node_modules/react-router-dom",
+    "rimraf": "workspace:../../../../node_modules/rimraf",
     "rxjs": "workspace:../../../../node_modules/rxjs",
     "rxjs-use-hooks": "workspace:../../../../node_modules/rxjs-use-hooks"
   },
