@@ -16,27 +16,6 @@ const UIPage: React.FC = () => {
         }
     }, [uiState, location]);
 
-    function iframeURLChange(iframe: HTMLIFrameElement, callback: (url: string) => void) {
-        var unloadHandler = function () {
-            // Timeout needed because the URL changes immediately after
-            // the `unload` event is dispatched.
-            setTimeout(function () {
-                callback(iframe?.contentWindow?.location?.href as any);
-            }, 0);
-        };
-
-        function attachUnload() {
-            // Remove the unloadHandler in case it was already attached.
-            // Otherwise, the change will be dispatched twice.
-            iframe?.contentWindow?.removeEventListener("unload", unloadHandler);
-            iframe?.contentWindow?.addEventListener("unload", unloadHandler);
-        }
-
-        iframe.addEventListener("load", attachUnload);
-        attachUnload();
-    }
-
-
     function navigateInApp() {
         if (!uiState.isLoggedIn) {
             return
@@ -48,9 +27,6 @@ const UIPage: React.FC = () => {
         if (!iframeExists) {
             iframe = document.createElement('iframe')
             iframe.name = 'AIRportUi'
-            iframeURLChange(iframe, (newURL: string) => {
-                console.log("URL changed:", newURL)
-            })
         }
         if (!uiIFrameWrapper?.childElementCount) {
             uiIFrameWrapper?.appendChild(iframe)
