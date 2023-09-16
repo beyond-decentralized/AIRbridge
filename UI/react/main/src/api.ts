@@ -11,10 +11,10 @@ export interface ICurrentUiState {
     iframe: HTMLIFrameElement
 }
 
-export const theUiState: IUiState = {
+let theUiState: IUiState = {
     isLoggedIn: false
 }
-export const theCurrentUiState: ICurrentUiState = {
+let theCurrentUiState: ICurrentUiState = {
     currentUiUrl: '',
     iframe: null as any
 }
@@ -31,6 +31,28 @@ export const dispatchers: IUiDispatchers = {
     setUiState: null as any
 }
 
+export function getCurrentUiState(): ICurrentUiState {
+    return theCurrentUiState
+}
+
+export function setCurrentUiState(
+    newCurrentUiSate: ICurrentUiState
+): void {
+    theCurrentUiState = newCurrentUiSate
+    dispatchers.setCurrentUiState(newCurrentUiSate)
+}
+
+export function getUiState(): IUiState {
+    return theUiState
+}
+
+export function setUiState(
+    newUiSate: IUiState
+) {
+    theUiState = newUiSate
+    dispatchers.setUiState(theUiState)
+}
+
 let latestRepositories: IRepository[] = []
 let setRepositoriesCallback: (repositories: IRepository[]) => void
 airportApi.getRepositories().subscribe((
@@ -41,6 +63,31 @@ airportApi.getRepositories().subscribe((
     }
     latestRepositories = repositories
 })
+
+airportApi.getCurrentAppUrl().subscribe((
+    currentAppUrl
+) => {
+    if (!currentAppUrl) {
+        return
+    }
+
+
+    currentAppUrl = currentAppUrl.split('//')[1]
+    if ('/ui/' + currentAppUrl === location.pathname) {
+        return
+    }
+    setCurrentUiState({
+        ...theCurrentUiState,
+        currentUiUrl: currentAppUrl
+    })
+    history.pushState(null, '', '/ui/' + currentAppUrl)
+})
+
+window.onpopstate = (_event) => {
+    setTimeout(() => {
+        airportApi.uiGoBack()
+    })
+}
 
 export function signUp(
     ev: CustomEvent<OverlayEventDetail>,
@@ -100,9 +147,9 @@ async function asyncSignUp(
     }
     try {
         await airportApi.signUp(action, userAccountInfo)
-        theUiState.isLoggedIn = true
-        dispatchers.setUiState({
-            ...theUiState
+        setUiState({
+            ...theUiState,
+            isLoggedIn: true
         })
     } catch (e) {
         let message = e

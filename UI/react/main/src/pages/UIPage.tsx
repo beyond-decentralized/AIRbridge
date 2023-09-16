@@ -2,7 +2,8 @@ import { useLocation } from 'react-router-dom';
 import { IonContent, IonPage } from '@ionic/react';
 import './UIPage.css';
 import { useContext, useEffect } from 'react';
-import { CurrentUiStateContext, UiStateContext, dispatchers } from '../api';
+import { CurrentUiStateContext, UiStateContext, setCurrentUiState } from '../api';
+import { airportApi } from '@airport/server';
 
 const UIPage: React.FC = () => {
     const location = useLocation()
@@ -27,6 +28,7 @@ const UIPage: React.FC = () => {
         if (!iframeExists) {
             iframe = document.createElement('iframe')
             iframe.name = 'AIRportUi'
+            airportApi.setUiIframe(iframe)
         }
         if (!uiIFrameWrapper?.childElementCount) {
             uiIFrameWrapper?.appendChild(iframe)
@@ -36,9 +38,10 @@ const UIPage: React.FC = () => {
             uiUrl = currentUiState.currentUiUrl
             history.replaceState(null, "", '/ui/' + uiUrl)
         }
-        if (currentUiState.currentUiUrl !== uiUrl || !iframeExists) {
+        const uiHost = uiUrl.split('/')[0]
+        if (currentUiState.currentUiUrl.split('/')[0] !== uiHost || !iframeExists) {
             iframe.src = uiUrl ? 'http://' + uiUrl.replaceAll('%2F', '/') : ''
-            dispatchers.setCurrentUiState({
+            setCurrentUiState({
                 iframe,
                 currentUiUrl: uiUrl
             })

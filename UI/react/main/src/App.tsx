@@ -25,7 +25,7 @@ import { useIonToast } from '@ionic/react';
 
 /* Theme variables */
 import './theme/variables.css';
-import { CurrentUiStateContext, ICurrentUiState, IUiState, UiStateContext, dispatchers, signUp, theCurrentUiState, theUiState } from './api'
+import { CurrentUiStateContext, ICurrentUiState, IUiState, UiStateContext, dispatchers, signUp, getCurrentUiState, getUiState } from './api'
 import Layout from './Layout'
 import { useEffect, useState } from 'react';
 
@@ -34,8 +34,8 @@ setupIonicReact();
 const App: React.FC = () => {
   const [present] = useIonToast()
 
-  const [uiState, setUiState] = useState<IUiState>(() => theUiState)
-  const [currentUiState, setCurrentUiState] = useState<ICurrentUiState>(() => theCurrentUiState)
+  const [uiState, setUiState] = useState<IUiState>(() => getUiState())
+  const [currentUiState, setCurrentUiState] = useState<ICurrentUiState>(() => getCurrentUiState())
 
   useEffect(() => {
     dispatchers.setCurrentUiState = setCurrentUiState
