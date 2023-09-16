@@ -28,6 +28,7 @@
     "@types/react-router": "workspace:../../../../node_modules/@types/react-router",
     "@types/react-router-dom": "workspace:../../../../node_modules/@types/react-router-dom",
     "ionicons": "workspace:../../../../node_modules/ionicons",
+    "observable-hooks": "workspace:../../../../node_modules/observable-hooks",
     "react": "workspace:../../../../node_modules/react",
     "react-dom": "workspace:../../../../node_modules/react-dom",
     "react-router": "workspace:../../../../node_modules/react-router",
