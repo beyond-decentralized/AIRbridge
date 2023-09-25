@@ -1,0 +1,23 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Applications</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Applications</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-item *ngIf="!applications.length">
+    No Applications loaded
+  </ion-item>
+  <ng-container *ngIf="applications.length">
+    <ion-item *ngFor="let application of applications(); trackBy: trackApplication">
+      {{application.domain.name}}
+      <br/>
+      {{application.name}}
+    </ion-item>
+  </ng-container>
+</ion-content>

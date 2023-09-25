@@ -1,0 +1,38 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="chevron-back-outline" />
+    </ion-buttons>
+    <ion-title>Repositories</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">Repositories</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-item *ngIf="!repositories.length">
+    No Repositories present
+  </ion-item>
+  <ng-container *ngIf="repositories.length">
+    <ion-item *ngFor="let repository of repositories(); trackBy: trackRepository">
+      <div>
+        <div class="root-repository-name">
+          {{repository.name}}
+        </div>
+        <div>
+          <ion-button [href]="repository.uiEntryUri" fill="clear" rel="noopener noreferrer" target="_blank">
+            <ion-icon slot="start" icon="eye-outline"></ion-icon>
+            View
+          </ion-button>
+          <ion-button fill="clear" [routerLink]="'./repository/' + repository.GUID">
+            <ion-icon slot="start" icon="document-outline"></ion-icon>
+            Details
+          </ion-button>
+        </div>
+      </div>
+    </ion-item>
+  </ng-container>
+</ion-content>

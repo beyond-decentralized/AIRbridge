@@ -1,0 +1,82 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button text="" icon="chevron-back-outline" />
+    </ion-buttons>
+    <ion-title>{{repository() ? 'Repository' : 'Loading...'}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{repository() ? 'Repository' : 'Loading...'}}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-item *ngIf="!repository()">
+    Loading...
+  </ion-item>
+  <ng-container *ngIf="repository()">
+    <ion-item>
+      <ion-label>Name:</ion-label>
+      {{repository()?.name}}
+    </ion-item>
+    <ion-button [href]="repository()?.uiEntryUri" fill="clear" rel="noopener noreferrer" target="_blank">
+      <ion-icon slot="start" icon={eyeOutline}></ion-icon>
+      View
+    </ion-button>
+    <ion-accordion-group>
+      <ion-accordion value="first">
+        <ion-item slot="header" color="light">
+          <ion-label>References</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ng-container
+            *ngIf="!repository()?.referencedInRepositories || !repository()?.referencedInRepositories?.length">
+            <ion-item>
+              No Referenced Repositories found
+            </ion-item>
+          </ng-container>
+          <ng-container *ngIf="repository()?.referencedRepositories && repository()?.referencedRepositories?.length">
+            <ion-item
+              *ngFor="let repositoryReference of repository()?.referencedRepositories; trackBy: referencedRepositoryTracking"
+              color="light" slot="header">
+              <ion-label>
+                {{repositoryReference.referencedRepository.name}}
+              </ion-label>
+              <ion-button [routerLink]="'/repository/' + repositoryReference.referencedRepository.GUID" fill="clear">
+                <ion-icon slot="start" icon="document-outline"></ion-icon>
+                Details
+              </ion-button>
+            </ion-item>
+          </ng-container>
+        </div>
+      </ion-accordion>
+      <ion-accordion value="second">
+        <ion-item slot="header" color="light">
+          <ion-label>Referenced In</ion-label>
+        </ion-item>
+        <div class="ion-padding" slot="content">
+          <ng-container
+            *ngIf="repository()?.referencedInRepositories && repository()?.referencedInRepositories?.length">
+            <ion-item>
+              No Repositories with references to this Repository found
+            </ion-item>
+          </ng-container>
+          <ng-container
+            *ngIf="repository()?.referencedInRepositories && repository()?.referencedInRepositories?.length">
+            <ion-item
+              *ngFor="let repositoryReference of repository()?.referencedRepositories; trackBy: referencingRepositoryTracking"
+              color="light" key={referenceIndex} slot="header">
+              <ion-label>{{repositoryReference.referencingRepository.name}}</ion-label>
+              <ion-button [routerLink]="'/repository/' + repositoryReference.referencingRepository.GUID" fill="clear">
+                <ion-icon slot="start" icon="document-outline"></ion-icon>
+                Details
+              </ion-button>
+            </ion-item>
+          </ng-container>
+        </div>
+      </ion-accordion>
+    </ion-accordion-group>
+  </ng-container>
+</ion-content>

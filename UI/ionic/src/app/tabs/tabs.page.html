@@ -1,0 +1,26 @@
+<ion-tabs>
+  <ion-tab-bar [ngClass]="{'hide-tab-bar': isHideTabBar()}" id="tab-bar" slot="bottom">
+    <ion-tab-button tab="repositories" href="/repositories">
+      <ion-icon aria-hidden="true" name="briefcase"></ion-icon>
+      <ion-label>Repositories</ion-label>
+    </ion-tab-button>
+
+    <ion-tab-button tab="applications" href="/applications">
+      <ion-icon aria-hidden="true" name="apps"></ion-icon>
+      <ion-label>Apps</ion-label>
+    </ion-tab-button>
+<!--
+    Need to implement search for user interfaces based on the
+  schemas of the currently loaded repositories
+  <IonTabButton tab="user-interfaces" href="/user-interfaces">
+    <IonIcon icon={desktop} />
+    <IonLabel>UIs</IonLabel>
+  </IonTabButton>
+-->
+    <ion-tab-button tab="current-user-interface" [href]="'/current-user-interface/' + uiUrl()">
+      <ion-icon aria-hidden="true" name="desktop"></ion-icon>
+      <ion-label>UI</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+
+</ion-tabs>
