@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve --ssl true --ssl-key ./node_modules/browser-sync/certs/server.key --ssl-cert ./node_modules/browser-sync/certs/server.crt",
     "build": "ng build",
+    "clean-build": "rimraf dist && ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint"
@@ -63,6 +64,7 @@
     "karma-coverage-istanbul-reporter": "../../../node_modules/karma-coverage-istanbul-reporter",
     "karma-jasmine": "../../../node_modules/karma-jasmine",
     "karma-jasmine-html-reporter": "../../../node_modules/karma-jasmine-html-reporter",
+    "rimraf": "../../../node_modules/rimraf",
     "ts-node": "../../../node_modules/ts-node",
     "typescript": "../../../node_modules/typescript"
   },
