@@ -1,4 +1,4 @@
-import { airportApi, DbApplication, IRepository, IUserAccountInfo } from '@airport/server'
+import { airportApi, IApplication, IRepository, IUserAccountInfo } from '@airport/server'
 import { OverlayEventDetail } from '@ionic/react/dist/types/components/react-component-lib/interfaces';
 import { createContext } from 'react';
 
@@ -97,14 +97,14 @@ export function signUp(
 }
 
 export function getApplications(
-    setApplications: (applications: DbApplication[]) => void,
+    setApplications: (applications: IApplication[]) => void,
     showMessage: (message: string, duration: number) => void
 ) {
     getApplicationsAsync(setApplications, showMessage).then()
 }
 
 async function getApplicationsAsync(
-    setApplications: (applications: DbApplication[]) => void,
+    setApplications: (applications: IApplication[]) => void,
     showMessage: (message: string, duration: number) => void
 ) {
     try {
