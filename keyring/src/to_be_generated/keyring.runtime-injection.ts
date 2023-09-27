@@ -9,7 +9,7 @@ import { KeyRingManager } from '../manager/KeyRingManager'
 import { REPOSITORY_MANAGER } from '@airport/holding-pattern/dist/app/bundle'
 import { REPOSITORY_LOADER } from '@airport/air-traffic-control'
 import { TERMINAL_SESSION_MANAGER } from '@airport/terminal-map'
-import { DbApplicationUtils, Dictionary, KeyUtils } from '@airport/ground-control'
+import { ApplicationNameUtils, Dictionary, KeyUtils } from '@airport/ground-control'
 import { MessageSigningManager } from './keyring.runtime-index'
 
 export const keyring = app(application)
@@ -22,7 +22,7 @@ keyring.register(
 )
 
 keyring.setDependencies(KeyRingManager, {
-    dbApplicationUtils: DbApplicationUtils,
+    applicationNameUtils: ApplicationNameUtils,
     keyRingDao: KeyRingDao,
     keyUtils: KeyUtils,
     repositoryKeyDao: RepositoryKeyDao,

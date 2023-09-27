@@ -9,7 +9,7 @@ import { KeyRingDao } from "../dao/KeyRingDao";
 import { RepositoryKeyDao } from "../dao/RepositoryKeyDao";
 import { KeyRing } from "../ddl/KeyRing";
 import { RepositoryKey } from "../ddl/RepositoryKey";
-import { IDbApplicationUtils, IKeyUtils, RepositoryMember_PublicSigningKey } from "@airport/ground-control";
+import { IApplicationNameUtils, IKeyUtils, RepositoryMember_PublicSigningKey } from "@airport/ground-control";
 import { application } from "../to_be_generated/app-declaration";
 import { IKeyRing, IRepositoryKey } from "@airbridge/data-model";
 
@@ -33,7 +33,7 @@ export class KeyRingManager
     implements IKeyRingManager {
 
     @Inject()
-    dbApplicationUtils: IDbApplicationUtils
+    applicationNameUtils: IApplicationNameUtils
 
     @Inject()
     keyRingDao: KeyRingDao
@@ -66,7 +66,7 @@ export class KeyRingManager
         if (!keyRing) {
             const keyRingContext = {
                 ...context,
-                applicationFullName: this.dbApplicationUtils.getDbApplication_FullName(application),
+                applicationFullName: this.applicationNameUtils.getApplication_FullName(application),
                 newRepositoryGUID: 'DEVSERVR_' + userPrivateKey,
                 forKeyRingRepository: true
             }
