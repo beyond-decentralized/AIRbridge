@@ -14,7 +14,6 @@
   "dependencies": {
     "@airport/server": "../../../AIRport/platforms/server",
     "@airport/sqljs": "../../../AIRport/databases/sqljs",
-    "@airport/web-terminal": "../../../AIRport/platforms/web-terminal",
     "@angular/animations": "../../../node_modules/@angular/animations",
     "@angular/common": "../../../node_modules/@angular/common",
     "@angular/compiler": "../../../node_modules/@angular/compiler",
