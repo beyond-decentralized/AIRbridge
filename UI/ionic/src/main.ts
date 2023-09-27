@@ -1,11 +1,11 @@
-import { initFramework } from '@airport/web-terminal'
+import { initServer } from '@airport/server'
 import { enableProdMode } from '@angular/core'
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic'
 
 import { AppModule } from './app/app.module'
 import { environment } from './environments/environment'
 
-initFramework().then()
+initServer().then()
 
 if (environment.production) {
   enableProdMode()
