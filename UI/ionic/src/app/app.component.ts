@@ -1,6 +1,5 @@
 import { airportApi, IUserAccountInfo } from '@airport/server'
 import { Component } from '@angular/core';
-import { OverlayEventDetail } from '@ionic/core';
 import { StateService } from './services/state.service';
 import { ToastController } from '@ionic/angular';
 
@@ -15,16 +14,14 @@ export class AppComponent {
     private toastController: ToastController
   ) { }
 
-  async onLoginDismiss(
-    event: CustomEvent<OverlayEventDetail<IUserAccountInfo>>
+  async onSignUp(
+    userAccountInfo: IUserAccountInfo
   ): Promise<void> {
-    const action = event.detail.role
-    const userAccountInfo = event.detail.data as IUserAccountInfo
-    if (!action) {
+    if (!userAccountInfo) {
       return
     }
     try {
-      await airportApi.signUp(action, userAccountInfo)
+      await airportApi.signUp('signUp', userAccountInfo)
       this.stateService.isLoggedIn$.next(true);
     } catch (e) {
       let message = e as string

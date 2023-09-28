@@ -1,6 +1,6 @@
-import { DbApplication, IRepository, Repository_GUID, airportApi } from '@airport/server';
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { IApplication, IRepository, Repository_GUID, airportApi } from '@airport/server'
+import { Injectable } from '@angular/core'
+import { BehaviorSubject, Observable } from 'rxjs'
 
 @Injectable({
   providedIn: 'root'
@@ -17,11 +17,31 @@ export class StateService {
 
   iframe: HTMLIFrameElement = null as any
 
-  repositories$ = airportApi.getRepositories()
+  private repositories$: Observable<IRepository[]> = null as any
 
-  applications$ = airportApi.getAllApplications()
+  private applications$: Observable<IApplication[]> = null as any
 
   constructor() {
+  }
+
+  async getRepositories(): Promise<Observable<IRepository[]>> {
+    if (this.repositories$) {
+      return this.repositories$
+    }
+
+    this.repositories$ = await airportApi.getRepositories()
+
+    return this.repositories$
+  }
+
+  async getApplications(): Promise<Observable<IApplication[]>> {
+    if (this.applications$) {
+      return this.applications$
+    }
+
+    this.applications$ = await airportApi.getAllApplications()
+
+    return this.applications$
   }
 
   getRepository$(

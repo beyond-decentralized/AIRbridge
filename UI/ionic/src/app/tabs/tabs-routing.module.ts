@@ -16,7 +16,7 @@ const routes: Routes = [
         loadChildren: () => import('../pages/applications/applications.module').then(m => m.ApplicationsPageModule)
       },
       {
-        path: 'current-user-interface',
+        path: 'ui/:uiPath',
         loadChildren: () => import('../pages/user-interface/user-interface.module').then(m => m.UserInterfacePageModule)
       },
       {

@@ -1,24 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
 import { StateService } from '../../services/state.service';
 import { IRepository } from '@airport/server';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-repositories',
   templateUrl: './repositories.page.html',
   styleUrls: ['./repositories.page.scss'],
 })
-export class RepositoriesPage implements OnInit {
+export class RepositoriesPage implements OnInit, OnDestroy {
 
-  repositories = toSignal(this.stateService.repositories$, {
-    initialValue: []
-  })
+  repositories: WritableSignal<IRepository[]> = signal([])
+
+  repositoriesSubscription: Subscription | null = null
 
   constructor(
     private stateService: StateService
   ) { }
 
-  ngOnInit() {
+  async ngOnInit(): Promise<void> {
+    const repositories$ = await this.stateService.getRepositories()
+    this.repositoriesSubscription = repositories$
+      .subscribe(repositories => {
+        this.repositories.set(repositories)
+      })
+  }
+
+  ngOnDestroy(): void {
+    this.repositoriesSubscription?.unsubscribe()
   }
 
   trackRepository(

@@ -1,7 +1,6 @@
 import { IUserAccountInfo } from '@airport/server'
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { IonModal } from '@ionic/angular';
-import { OverlayEventDetail } from '@ionic/core';
 
 @Component({
   selector: 'app-login-modal',
@@ -12,7 +11,8 @@ export class LoginModalComponent implements OnInit {
 
   @ViewChild(IonModal) modal?: IonModal
   @Input() triggerId?: string;
-  @Output() onWillDismiss: EventEmitter<CustomEvent<OverlayEventDetail<IUserAccountInfo>>> = new EventEmitter<CustomEvent<OverlayEventDetail<IUserAccountInfo>>>();
+  @Output() onSignUp: EventEmitter<IUserAccountInfo>
+    = new EventEmitter<IUserAccountInfo>();
 
   canSignUp: boolean = false
   isOpen = true
@@ -23,8 +23,6 @@ export class LoginModalComponent implements OnInit {
   ngOnInit() { }
 
   willDismiss(event: Event): void {
-    const overlayEventDetailEvent = event as CustomEvent<OverlayEventDetail<IUserAccountInfo>>;
-    this.onWillDismiss.emit(overlayEventDetailEvent);
   }
 
   usernameChanged(event: Event): void {
@@ -37,10 +35,11 @@ export class LoginModalComponent implements OnInit {
       return
     }
     this.isOpen = false
-    this.modal?.dismiss({
+    this.onSignUp.emit({
       email: this.username + '@random-email-provider.com',
       username: this.username
-    }, 'signUp')
+    })
+    this.modal?.dismiss()
   }
 
 }

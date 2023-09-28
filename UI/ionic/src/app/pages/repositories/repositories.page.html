@@ -13,10 +13,10 @@
       <ion-title size="large">Repositories</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-item *ngIf="!repositories.length">
+  <ion-item *ngIf="!repositories().length">
     No Repositories present
   </ion-item>
-  <ng-container *ngIf="repositories.length">
+  <ng-container *ngIf="repositories().length">
     <ion-item *ngFor="let repository of repositories(); trackBy: trackRepository">
       <div>
         <div class="root-repository-name">

@@ -10,10 +10,10 @@
       <ion-title size="large">Applications</ion-title>
     </ion-toolbar>
   </ion-header>
-  <ion-item *ngIf="!applications.length">
+  <ion-item *ngIf="!applications().length">
     No Applications loaded
   </ion-item>
-  <ng-container *ngIf="applications.length">
+  <ng-container *ngIf="applications().length">
     <ion-item *ngFor="let application of applications(); trackBy: trackApplication">
       {{application.domain.name}}
       <br/>
