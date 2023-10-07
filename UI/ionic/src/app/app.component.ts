@@ -2,6 +2,8 @@ import { airportApi, IUserAccountInfo } from '@airport/server'
 import { Component } from '@angular/core';
 import { StateService } from './services/state.service';
 import { ToastController } from '@ionic/angular';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { LocationService } from './services/location.service';
 
 @Component({
   selector: 'app-root',
@@ -9,7 +11,21 @@ import { ToastController } from '@ionic/angular';
   styleUrls: ['app.component.scss'],
 })
 export class AppComponent {
+
+  isUiShown = toSignal(this.stateService.isUiShown$, {
+    requireSync: true
+  });
+
+  isUiLoaded = toSignal(this.stateService.isUiLoaded$, {
+    initialValue: false
+  })
+
+  uiFrameSource = toSignal(this.stateService.uiFrameSource$, {
+    initialValue: ''
+  })
+
   constructor(
+    private locationService: LocationService,
     private stateService: StateService,
     private toastController: ToastController
   ) { }
@@ -35,5 +51,9 @@ export class AppComponent {
         duration: 10000
       })
     }
+  }
+
+  handleTurbaseLogoClick(): void {
+    this.locationService.goToNonUi("/tabs/applications")
   }
 }

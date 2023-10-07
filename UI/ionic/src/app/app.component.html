@@ -1,4 +1,13 @@
 <ion-app>
+  <div [ngClass]="{'hide': !isUiShown()}" class="turbase-button-wrapper">
+    <img class="turbase-button" (click)="handleTurbaseLogoClick()" src="assets/turbase-turbine.png" />
+  </div>
+  <div [ngClass]="{'hide': !isUiShown()}" class="ui-iframe-wrapper" id="ui-iframe-wrapper">
+    <iframe id="ui-iframe" name="AIRportUI" style="border: none; height: 100%; width: 100%;"
+    [src]="uiFrameSource()"
+    ></iframe>
+  </div>
+
   <app-login-modal (onSignUp)="onSignUp($event)">
 
   </app-login-modal>

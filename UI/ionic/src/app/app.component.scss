@@ -1,0 +1,21 @@
+.hide {
+    display: none;
+}
+
+.turbase-button-wrapper {
+    position: fixed;
+    text-align: center;
+    top: -20px;
+    width: 100%;
+    z-index: 10;
+}
+
+.turbase-button {
+    width: 40px;
+}
+
+.ui-iframe-wrapper {
+    height: 100%;
+    width: 100%;
+    z-index: 5;
+}

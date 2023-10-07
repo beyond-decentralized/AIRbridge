@@ -1,5 +1,5 @@
-<ion-tabs>
-  <ion-tab-bar [ngClass]="{'hide-tab-bar': isHideTabBar()}" id="tab-bar" slot="bottom">
+<ion-tabs [ngClass]="{'hide': isUiShown()}">
+  <ion-tab-bar id="tab-bar" slot="bottom">
     <ion-tab-button tab="repositories" href="/repositories">
       <ion-icon aria-hidden="true" name="briefcase"></ion-icon>
       <ion-label>Repositories</ion-label>
@@ -17,7 +17,7 @@
     <IonLabel>UIs</IonLabel>
   </IonTabButton>
 -->
-    <ion-tab-button tab="current-user-interface" [href]="'/ui/' + uiUrl()">
+    <ion-tab-button *ngIf="isUiLoaded()" tab="ui" (click)="goToUi()">
       <ion-icon aria-hidden="true" name="desktop"></ion-icon>
       <ion-label>UI</ion-label>
     </ion-tab-button>

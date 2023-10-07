@@ -9,17 +9,21 @@ import { StateService } from '../services/state.service';
 })
 export class TabsPage {
 
-  isHideTabBar = toSignal(this.stateService.isUiShown$, {
+  isUiShown = toSignal(this.stateService.isUiShown$, {
     requireSync: true
   });
 
-  uiUrl = toSignal(this.stateService.uiLocation$, {
-    requireSync: true
+  isUiLoaded = toSignal(this.stateService.isUiLoaded$, {
+    initialValue: false
   })
 
   constructor(
     private stateService: StateService
   ) {
+  }
+
+  goToUi(): void {
+    this.stateService.isUiShown$.next(true)
   }
 
 }

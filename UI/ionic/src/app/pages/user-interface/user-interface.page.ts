@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { LocationService } from '../../services/location.service';
 
 @Component({
   selector: 'app-user-interface',
@@ -8,15 +7,9 @@ import { LocationService } from '../../services/location.service';
 })
 export class UserInterfacePage implements OnInit {
 
-  constructor(
-    private locationService: LocationService
-  ) { }
+  constructor() { }
 
   ngOnInit() {
-  }
-
-  handleTurbaseLogoClick() {
-    this.locationService.goTo("/tabs/applications")
   }
 
 }

@@ -7,7 +7,7 @@ const routes: Routes = [
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
   },
   {
-    path: 'repositories',
+    path: 'tabs/repositories',
     loadChildren: () => import('./pages/repositories/repositories.module').then( m => m.RepositoriesPageModule)
   },
   {
@@ -15,11 +15,11 @@ const routes: Routes = [
     loadChildren: () => import('./pages/repository/repository.module').then( m => m.RepositoryPageModule)
   },
   {
-    path: 'applications',
+    path: 'tabs/applications',
     loadChildren: () => import('./pages/applications/applications.module').then( m => m.ApplicationsPageModule)
   },
   {
-    path: 'ui/:uiPath',
+    path: 'tabs/ui/:uiPath',
     loadChildren: () => import('./pages/user-interface/user-interface.module').then( m => m.UserInterfacePageModule)
   },
   {

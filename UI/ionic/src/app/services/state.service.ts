@@ -1,5 +1,6 @@
 import { IApplication, IRepository, Repository_GUID, airportApi } from '@airport/server'
 import { Injectable } from '@angular/core'
+import { SafeResourceUrl } from '@angular/platform-browser'
 import { BehaviorSubject, Observable } from 'rxjs'
 
 @Injectable({
@@ -7,13 +8,13 @@ import { BehaviorSubject, Observable } from 'rxjs'
 })
 export class StateService {
 
-  isUiShown$ = new BehaviorSubject(false)
+  isUiLoaded$ = new BehaviorSubject(false)
 
-  uiLocation$ = new BehaviorSubject('')
+  isUiShown$ = new BehaviorSubject(false)
 
   isLoggedIn$ = new BehaviorSubject(false)
 
-  currentUiUrl$ = new BehaviorSubject('')
+  uiFrameSource$ = new BehaviorSubject<string | SafeResourceUrl>('')
 
   iframe: HTMLIFrameElement = null as any
 
