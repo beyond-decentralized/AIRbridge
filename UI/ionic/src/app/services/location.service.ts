@@ -123,7 +123,7 @@ export class LocationService {
     } else if (currentLocation.startsWith(uiPathPrefix)) {
       uiHostAndPath = currentLocation.substring(uiPathPrefix.length)
       uiHostAndPath = uiHostAndPath.replace(/%2F/g, '/')
-      uiProtocol = 'http:'
+      uiProtocol = 'https:'
     }
     uiHostAndPath = this.sanitizer.sanitize(SecurityContext.URL,
       uiHostAndPath)?.toString() as string
