@@ -10,9 +10,11 @@ import { DomSanitizer } from '@angular/platform-browser'
 })
 export class LocationService {
 
+  lastNavigationStartEvent: NavigationStart | undefined
   lastNavigationId: number = -1
   lastUiLocation: string = ''
   lastUiHostAndPath: string = ''
+  isLastNavigationToUi = false
 
   constructor(
     private router: Router,
@@ -36,7 +38,16 @@ export class LocationService {
     ]) => {
       const navigationStartEvent = (routerEvent as NavigationStart)
 
-      this.navigateInUi(currentUiUrl, navigationStartEvent.url, navigationStartEvent.id)
+      let restoredNavigationId
+      if (this.lastNavigationStartEvent !== navigationStartEvent
+        && navigationStartEvent.restoredState
+        && navigationStartEvent.navigationTrigger === 'popstate') {
+        restoredNavigationId = navigationStartEvent.restoredState?.navigationId
+      }
+      this.lastNavigationStartEvent = navigationStartEvent
+
+      this.navigateInUi(currentUiUrl, navigationStartEvent.url,
+        navigationStartEvent.id, restoredNavigationId)
     })
 
     // Handle back-button press
@@ -66,7 +77,8 @@ export class LocationService {
   private navigateInUi(
     currentUiUrl: string,
     currentLocation: string,
-    navigationId: number
+    navigationId: number,
+    restoredNavigationId?: number
   ): void {
     const uiPathPrefix = '/tabs/ui/'
 
@@ -76,6 +88,17 @@ export class LocationService {
     // if currently navigating to a non UI page
     if (!currentLocation.startsWith(uiPathPrefix)
       && previousNavigationId !== navigationId) {
+      this.isLastNavigationToUi = false
+      return
+    }
+
+    if (this.isLastNavigationToUi && restoredNavigationId) {
+      if (restoredNavigationId < previousNavigationId) {
+        airportApi.uiGoBack()
+      } else {
+        airportApi.uiGoForward()
+      }
+      this.lastNavigationId = restoredNavigationId
       return
     }
 
@@ -86,6 +109,7 @@ export class LocationService {
       currentLocation = currentLocation.substring(0, currentLocation.length - 1)
     }
 
+    // remove double URL encoding of forward slashes
     currentLocation = currentLocation.replace(/%252F/g, '%2F')
 
     if (currentUiUrl) {
@@ -104,9 +128,14 @@ export class LocationService {
     uiHostAndPath = this.sanitizer.sanitize(SecurityContext.URL,
       uiHostAndPath)?.toString() as string
 
+    // Same UI URL as before
+    // OR current location isn't  an AIRport UI location 
+    // (is a framework page and its the entry into the Framework)
     if (uiPathPrefix + uiUrlSetByAIRport === currentLocation
       || (!uiUrlSetByAIRport
         && !currentLocation.startsWith(uiPathPrefix))) {
+      this.isLastNavigationToUi = true
+      this.stateService.isUiShown$.next(true)
       return
     }
 
@@ -122,6 +151,7 @@ export class LocationService {
 
     this.lastUiHostAndPath = uiHostAndPath
     this.lastUiLocation = currentLocation
+    this.isLastNavigationToUi = true
 
     if (!this.stateService.iframe) {
       const iframe = document.getElementById('ui-iframe')
