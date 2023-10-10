@@ -20,7 +20,7 @@ export class LocationService {
     private router: Router,
     private sanitizer: DomSanitizer,
     private stateService: StateService,
-    private zone: NgZone
+    private zone: NgZone,
   ) {
     combineLatest([
       router.events.pipe(
@@ -156,6 +156,7 @@ export class LocationService {
     if (!this.stateService.iframe) {
       const iframe = document.getElementById('ui-iframe')
       this.stateService.iframe = iframe as HTMLIFrameElement
+      // airportApi.setUiIframe(uiFrameSource, iframe as HTMLIFrameElement)
       airportApi.setUiIframe(uiFrameSource, iframe as HTMLIFrameElement, (callback: () => void) => {
         this.zone.runOutsideAngular(() => {
           callback()
