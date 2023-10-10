@@ -27,8 +27,13 @@ export class AppComponent {
   constructor(
     private locationService: LocationService,
     private stateService: StateService,
-    private toastController: ToastController
-  ) { }
+    private toastController: ToastController,
+    // cdRef: ChangeDetectorRef
+  ) {
+    // setInterval(() => {
+    //   cdRef.detectChanges();
+    // }, 3000);
+  }
 
   async onSignUp(
     userAccountInfo: IUserAccountInfo
