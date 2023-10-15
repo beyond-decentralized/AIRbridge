@@ -8,23 +8,23 @@ const routes: Routes = [
   },
   {
     path: 'tabs/repositories',
-    loadChildren: () => import('./pages/repositories/repositories.module').then( m => m.RepositoriesPageModule)
+    loadChildren: () => import('./pages/repositories/repositories.module').then(m => m.RepositoriesPageModule)
   },
   {
-    path: 'repository',
-    loadChildren: () => import('./pages/repository/repository.module').then( m => m.RepositoryPageModule)
+    path: 'repository/:repositoryGuid',
+    loadChildren: () => import('./pages/repository/repository.module').then(m => m.RepositoryPageModule)
   },
   {
     path: 'tabs/applications',
-    loadChildren: () => import('./pages/applications/applications.module').then( m => m.ApplicationsPageModule)
+    loadChildren: () => import('./pages/applications/applications.module').then(m => m.ApplicationsPageModule)
   },
   {
     path: 'tabs/ui/:uiPath',
-    loadChildren: () => import('./pages/user-interface/user-interface.module').then( m => m.UserInterfacePageModule)
+    loadChildren: () => import('./pages/user-interface/user-interface.module').then(m => m.UserInterfacePageModule)
   },
   {
     path: 'user-interfaces',
-    loadChildren: () => import('./pages/user-interfaces/user-interfaces.module').then( m => m.UserInterfacesPageModule)
+    loadChildren: () => import('./pages/user-interfaces/user-interfaces.module').then(m => m.UserInterfacesPageModule)
   }
 ];
 @NgModule({
@@ -33,4 +33,4 @@ const routes: Routes = [
   ],
   exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
