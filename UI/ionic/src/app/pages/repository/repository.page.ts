@@ -32,7 +32,7 @@ export class RepositoryPage implements OnInit, OnDestroy {
         this.currentRepositoryGuid = repositoryGuid
         this.repositorySubscription?.unsubscribe()
         this.repositorySubscription = this.stateService
-          .getRepository$(repositoryGuid)
+          .searchRepository$(repositoryGuid)
           .subscribe(repository => {
             this.repository.set(repository)
           })

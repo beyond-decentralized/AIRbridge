@@ -45,10 +45,10 @@ export class StateService {
     return this.applications$
   }
 
-  getRepository$(
+  searchRepository$(
     repositoryGuid: Repository_GUID
   ): Observable<IRepository> {
 
-    return airportApi.getRepository(repositoryGuid)
+    return airportApi.searchRepository(repositoryGuid)
   }
 }
