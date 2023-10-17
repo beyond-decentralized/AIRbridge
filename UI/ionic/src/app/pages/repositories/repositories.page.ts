@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, WritableSignal, signal } from '@angular/c
 import { StateService } from '../../services/state.service'
 import { IRepository } from '@airport/server'
 import { Subscription } from 'rxjs'
-]import { Router } from '@angular/router'
+import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-repositories',

@@ -2,7 +2,7 @@ import { IRepository, IRepositoryReference } from '@airport/server'
 import { Component, OnDestroy, OnInit, signal } from '@angular/core'
 import { ActivatedRoute, Router } from '@angular/router'
 import { Subscription } from 'rxjs'
-]import { StateService } from 'src/app/services/state.service'
+import { StateService } from 'src/app/services/state.service'
 
 @Component({
   selector: 'app-repository',
