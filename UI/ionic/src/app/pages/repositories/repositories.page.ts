@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core';
-import { StateService } from '../../services/state.service';
-import { IRepository } from '@airport/server';
-import { Subscription } from 'rxjs';
+import { Component, OnDestroy, OnInit, WritableSignal, signal } from '@angular/core'
+import { StateService } from '../../services/state.service'
+import { IRepository } from '@airport/server'
+import { Subscription } from 'rxjs'
+]import { Router } from '@angular/router'
 
 @Component({
   selector: 'app-repositories',
@@ -15,6 +16,7 @@ export class RepositoriesPage implements OnInit, OnDestroy {
   repositoriesSubscription: Subscription | null = null
 
   constructor(
+    private router: Router,
     private stateService: StateService
   ) { }
 
@@ -35,6 +37,12 @@ export class RepositoriesPage implements OnInit, OnDestroy {
     repository: IRepository
   ): string {
     return repository.GUID
+  }
+
+  viewRepository(
+    repository: IRepository
+  ): void {
+    this.router.navigate(['/tabs/ui', repository.uiEntryUri])
   }
 
 }

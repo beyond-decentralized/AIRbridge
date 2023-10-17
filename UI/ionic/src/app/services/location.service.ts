@@ -13,8 +13,9 @@ export class LocationService {
   lastNavigationStartEvent: NavigationStart | undefined
   lastNavigationId: number = -1
   lastUiLocation: string = ''
-  lastUiHostAndPath: string = ''
-  isLastNavigationToUi = false
+  lastAirportUiHostAndPath: string = ''
+  lastAirportUiUrl: string = ''
+  isLastNavigationToAirportUi = false
 
   constructor(
     private router: Router,
@@ -34,7 +35,7 @@ export class LocationService {
       distinctUntilChanged()
     ).subscribe(([
       routerEvent,
-      currentUiUrl
+      currentAirportUiUrl
     ]) => {
       const navigationStartEvent = (routerEvent as NavigationStart)
 
@@ -46,8 +47,15 @@ export class LocationService {
       }
       this.lastNavigationStartEvent = navigationStartEvent
 
-      this.navigateInUi(currentUiUrl, navigationStartEvent.url,
+      let changedAirportUiUrl = null
+      if (currentAirportUiUrl !== this.lastAirportUiUrl) {
+        changedAirportUiUrl = currentAirportUiUrl
+      }
+
+      this.navigateInUi(changedAirportUiUrl, navigationStartEvent.url,
         navigationStartEvent.id, restoredNavigationId)
+
+      this.lastAirportUiUrl = currentAirportUiUrl
     })
 
     // Handle back-button press
@@ -68,14 +76,8 @@ export class LocationService {
     // })
   }
 
-  goToUi(
-    appUrlAndProtocol: string
-  ): void {
-    this.navigateInUi(appUrlAndProtocol, this.lastUiLocation, this.lastNavigationId)
-  }
-
   private navigateInUi(
-    currentUiUrl: string,
+    changedAirportUiUrl: string | null,
     currentLocation: string,
     navigationId: number,
     restoredNavigationId?: number
@@ -88,11 +90,11 @@ export class LocationService {
     // if currently navigating to a non UI page
     if (!currentLocation.startsWith(uiPathPrefix)
       && previousNavigationId !== navigationId) {
-      this.isLastNavigationToUi = false
+      this.isLastNavigationToAirportUi = false
       return
     }
 
-    if (this.isLastNavigationToUi && restoredNavigationId) {
+    if (this.isLastNavigationToAirportUi && restoredNavigationId) {
       if (restoredNavigationId < previousNavigationId) {
         airportApi.uiGoBack()
       } else {
@@ -102,9 +104,9 @@ export class LocationService {
       return
     }
 
-    let uiHostAndPath = ''
-    let uiProtocol = ''
-    let uiUrlSetByAIRport = ''
+    let airportUiHostAndPath = ''
+    let airportUiProtocol = ''
+    let airportUiUrlSetByAIRport = ''
     if (currentLocation.endsWith('/')) {
       currentLocation = currentLocation.substring(0, currentLocation.length - 1)
     }
@@ -112,59 +114,64 @@ export class LocationService {
     // remove double URL encoding of forward slashes
     currentLocation = currentLocation.replace(/%252F/g, '%2F')
 
-    if (currentUiUrl) {
-      const uiProtocolAndUrl = currentUiUrl.split('//')
-      uiProtocol = uiProtocolAndUrl[0]
-      uiHostAndPath = uiProtocolAndUrl[1]
-      if (uiHostAndPath.endsWith('/')) {
-        uiHostAndPath = uiHostAndPath.substring(0, uiHostAndPath.length - 1)
+    if (changedAirportUiUrl) {
+      const auiportUiProtocolAndUrl = changedAirportUiUrl.split('//')
+      airportUiProtocol = auiportUiProtocolAndUrl[0]
+      airportUiHostAndPath = auiportUiProtocolAndUrl[1]
+      if (airportUiHostAndPath.endsWith('/')) {
+        airportUiHostAndPath = airportUiHostAndPath.substring(0, airportUiHostAndPath.length - 1)
       }
-      uiUrlSetByAIRport = uiHostAndPath.replace(/\//g, '%2F')
+      airportUiUrlSetByAIRport = airportUiHostAndPath.replace(/\//g, '%2F')
     } else if (currentLocation.startsWith(uiPathPrefix)) {
-      uiHostAndPath = currentLocation.substring(uiPathPrefix.length)
-      uiHostAndPath = uiHostAndPath.replace(/%2F/g, '/')
-      uiProtocol = 'https:'
+      airportUiHostAndPath = currentLocation.substring(uiPathPrefix.length)
+      airportUiHostAndPath = airportUiHostAndPath.replace(/%2F/g, '/')
+      airportUiProtocol = 'https:'
     }
-    uiHostAndPath = this.sanitizer.sanitize(SecurityContext.URL,
-      uiHostAndPath)?.toString() as string
+    airportUiHostAndPath = this.sanitizer.sanitize(SecurityContext.URL,
+      airportUiHostAndPath)?.toString() as string
 
     // Same UI URL as before
     // OR current location isn't  an AIRport UI location 
     // (is a framework page and its the entry into the Framework)
-    if (uiPathPrefix + uiUrlSetByAIRport === currentLocation
-      || (!uiUrlSetByAIRport
+    if (uiPathPrefix + airportUiUrlSetByAIRport === currentLocation
+      || (!airportUiUrlSetByAIRport
         && !currentLocation.startsWith(uiPathPrefix))) {
-      this.isLastNavigationToUi = true
+      this.isLastNavigationToAirportUi = true
       this.stateService.isUiShown$.next(true)
       return
     }
 
     const iframeSourceLoaded = !!this.stateService.iframe
-    const uiFrameSource = uiHostAndPath ? `${uiProtocol}//${uiHostAndPath}` : ''
-    const uiHost = uiHostAndPath.split('/')[0]
-    if (this.lastUiHostAndPath.split('/')[0] !== uiHost || !iframeSourceLoaded) {
-      this.stateService.uiFrameSource$.next(this.sanitizer.bypassSecurityTrustResourceUrl(uiFrameSource))
+    const airportUiFrameSource = airportUiHostAndPath ? `${airportUiProtocol}//${airportUiHostAndPath}` : ''
+    const airportUiHostAndPathFragments = airportUiHostAndPath.split('/')
+    const airportUiHost = airportUiHostAndPathFragments[0]
+    airportUiHostAndPathFragments.shift()
+    const airportUiPath = airportUiHostAndPathFragments.join('/')
+    if (this.lastAirportUiHostAndPath.split('/')[0] !== airportUiHost || !iframeSourceLoaded) {
+      this.stateService.uiFrameSource$.next(this.sanitizer.bypassSecurityTrustResourceUrl(airportUiFrameSource))
+    } else if (!airportUiUrlSetByAIRport && this.lastAirportUiHostAndPath.split('/')[0] === airportUiHost) {
+      airportApi.uiChangeUrl(airportUiPath, airportUiHost, airportUiProtocol)
     }
 
     this.stateService.isUiShown$.next(true)
     this.stateService.isUiLoaded$.next(true)
 
-    this.lastUiHostAndPath = uiHostAndPath
+    this.lastAirportUiHostAndPath = airportUiHostAndPath
     this.lastUiLocation = currentLocation
-    this.isLastNavigationToUi = true
+    this.isLastNavigationToAirportUi = true
 
     if (!this.stateService.iframe) {
       const iframe = document.getElementById('ui-iframe')
       this.stateService.iframe = iframe as HTMLIFrameElement
       // airportApi.setUiIframe(uiFrameSource, iframe as HTMLIFrameElement)
-      airportApi.setUiIframe(uiFrameSource, iframe as HTMLIFrameElement, (callback: () => void) => {
+      airportApi.setUiIframe(airportUiFrameSource, iframe as HTMLIFrameElement, (callback: () => void) => {
         this.zone.runOutsideAngular(() => {
           callback()
         })
       })
     }
-    if (uiUrlSetByAIRport) {
-      this.router.navigate(['/tabs/ui', uiUrlSetByAIRport])
+    if (airportUiUrlSetByAIRport) {
+      this.router.navigate(['/tabs/ui', airportUiUrlSetByAIRport])
     }
   }
 

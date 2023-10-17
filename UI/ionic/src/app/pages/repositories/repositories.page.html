@@ -23,7 +23,7 @@
           {{repository.name}}
         </div>
         <div>
-          <ion-button [href]="repository.uiEntryUri" fill="clear" rel="noopener noreferrer" target="_blank">
+          <ion-button (click)="viewRepository(repository)" fill="clear" rel="noopener noreferrer" target="_blank">
             <ion-icon slot="start" icon="eye-outline"></ion-icon>
             View
           </ion-button>

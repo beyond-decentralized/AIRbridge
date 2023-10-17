@@ -21,7 +21,7 @@
       <ion-label>Name:</ion-label>
       {{repository()?.name}}
     </ion-item>
-    <ion-button [href]="repository()?.uiEntryUri" fill="clear" rel="noopener noreferrer" target="_blank">
+    <ion-button (click)="viewRepository()" fill="clear" rel="noopener noreferrer" target="_blank">
       <ion-icon slot="start" icon={eyeOutline}></ion-icon>
       View
     </ion-button>

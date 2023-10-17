@@ -1,8 +1,8 @@
-import { IRepository, IRepositoryReference } from '@airport/server';
-import { Component, OnDestroy, OnInit, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { StateService } from 'src/app/services/state.service';
+import { IRepository, IRepositoryReference } from '@airport/server'
+import { Component, OnDestroy, OnInit, signal } from '@angular/core'
+import { ActivatedRoute, Router } from '@angular/router'
+import { Subscription } from 'rxjs'
+]import { StateService } from 'src/app/services/state.service'
 
 @Component({
   selector: 'app-repository',
@@ -19,6 +19,7 @@ export class RepositoryPage implements OnInit, OnDestroy {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private stateService: StateService
   ) {
     this.paramMapSubscription = this.route.paramMap
@@ -59,6 +60,10 @@ export class RepositoryPage implements OnInit, OnDestroy {
     repositoryReference: IRepositoryReference
   ): string {
     return repositoryReference.referencingRepository.GUID
+  }
+
+  viewRepository(): void {
+    this.router.navigate(['/tabs/ui', this.repository()?.uiEntryUri])
   }
 
 }
