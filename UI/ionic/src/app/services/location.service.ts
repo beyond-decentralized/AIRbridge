@@ -172,7 +172,9 @@ export class LocationService {
       })
     }
     if (airportUiUrlSetByAIRport) {
-      this.router.navigate(['/tabs/ui', airportUiUrlSetByAIRport])
+      this.zone.run(() => {
+        this.router.navigate(['/tabs/ui', airportUiUrlSetByAIRport])
+      })
     }
   }
 
