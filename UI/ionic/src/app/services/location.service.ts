@@ -149,6 +149,7 @@ export class LocationService {
     const airportUiPath = airportUiHostAndPathFragments.join('/')
     if (this.lastAirportUiHostAndPath.split('/')[0] !== airportUiHost || !iframeSourceLoaded) {
       this.stateService.uiFrameSource$.next(this.sanitizer.bypassSecurityTrustResourceUrl(airportUiFrameSource))
+      airportApi.unloadUI().then()
     } else if (!airportUiUrlSetByAIRport && this.lastAirportUiHostAndPath.split('/')[0] === airportUiHost) {
       airportApi.uiChangeUrl(airportUiPath, airportUiHost, airportUiProtocol)
     }
