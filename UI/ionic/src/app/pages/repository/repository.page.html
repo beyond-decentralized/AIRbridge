@@ -32,7 +32,7 @@
         </ion-item>
         <div class="ion-padding" slot="content">
           <ng-container
-            *ngIf="!repository()?.referencedInRepositories || !repository()?.referencedInRepositories?.length">
+            *ngIf="!repository()?.referencedRepositories || !repository()?.referencedRepositories?.length">
             <ion-item>
               No Referenced Repositories found
             </ion-item>
@@ -58,7 +58,7 @@
         </ion-item>
         <div class="ion-padding" slot="content">
           <ng-container
-            *ngIf="repository()?.referencedInRepositories && repository()?.referencedInRepositories?.length">
+            *ngIf="!repository()?.referencedInRepositories || !repository()?.referencedInRepositories?.length">
             <ion-item>
               No Repositories with references to this Repository found
             </ion-item>
@@ -66,7 +66,7 @@
           <ng-container
             *ngIf="repository()?.referencedInRepositories && repository()?.referencedInRepositories?.length">
             <ion-item
-              *ngFor="let repositoryReference of repository()?.referencedRepositories; trackBy: referencingRepositoryTracking"
+              *ngFor="let repositoryReference of repository()?.referencedInRepositories; trackBy: referencingRepositoryTracking"
               color="light" key={referenceIndex} slot="header">
               <ion-label>{{repositoryReference.referencingRepository.name}}</ion-label>
               <ion-button [routerLink]="'/repository/' + repositoryReference.referencingRepository.GUID" fill="clear">
