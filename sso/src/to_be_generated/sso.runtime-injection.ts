@@ -3,7 +3,7 @@ import { app } from '@airport/direction-indicator'
 import { KeyUtils } from '@airport/ground-control'
 import { ActorDao, RepositoryDao, RepositoryMemberDao } from '@airport/holding-pattern/dist/app/bundle'
 import { HISTORY_MANAGER, TerminalStore, TERMINAL_SESSION_MANAGER, UserStore } from '@airport/terminal-map'
-import { UserAccountManager } from '@airport/travel-document-checkpoint/dist/app/bundle'
+import { TerminalDao, UserAccountManager } from '@airport/travel-document-checkpoint/dist/app/bundle'
 import { RepositoryMaintenanceManager } from '../api/RepositoryMaintenanceManager'
 import { SSOManager } from '../api/SSOManager'
 import { application } from './app-declaration'
@@ -26,6 +26,7 @@ sso.setDependencies(SSOManager, {
     keyUtils: KeyUtils,
     keyRingManager: KeyRingManager,
     // signInAdapter: ISignInAdapter,
+    terminalDao: TerminalDao,
     terminalStore: TerminalStore,
     userAccountManager: UserAccountManager,
     userStore: UserStore

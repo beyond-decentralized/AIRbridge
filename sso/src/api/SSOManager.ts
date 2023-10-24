@@ -3,7 +3,7 @@ import { IKeyRingManager } from "@airbridge/keyring/dist/app/bundle";
 import { IContext, Inject, Injected } from "@airport/direction-indicator";
 import { IKeyUtils } from "@airport/ground-control";
 import { IUserAccountInfo, IUserSession, TerminalStore, UserStore } from '@airport/terminal-map'
-import { IUserAccountManager } from "@airport/travel-document-checkpoint/dist/app/bundle";
+import { IUserAccountManager, TerminalDao } from "@airport/travel-document-checkpoint/dist/app/bundle";
 import { ISignInAdapter } from "../signIn/SignInAdapter";
 import { UserAccount_Email } from "@airport/aviation-communication";
 import { Api } from "@airport/air-traffic-control";
@@ -37,6 +37,9 @@ export class SSOManager
 
     @Inject()
     signInAdapter: ISignInAdapter
+
+    @Inject()
+    terminalDao: TerminalDao
 
     @Inject()
     terminalStore: TerminalStore
@@ -82,6 +85,11 @@ export class SSOManager
 
         const keyRing = await this.keyRingManager.getKeyRing(
             userPrivateKey, signingKey.private, context)
+
+        const terminal = this.terminalStore.getTerminal()
+        terminal.owner = userAccount
+        await this.terminalDao.updateOwner(
+            terminal, userAccount, context)
 
         const sessionMapByAccountPublicSigningKey = this.userStore
             .getSessionMapByAccountPublicSigningKey()
