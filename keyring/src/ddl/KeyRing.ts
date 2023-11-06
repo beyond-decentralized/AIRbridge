@@ -9,6 +9,11 @@ export class KeyRing
     extends InternalAirEntity
     implements IKeyRing {
 
+    // FIXME: make non-nullable once implemented
+    @Column({ name: 'EMAIL' })
+    @DbString()
+    email: KeyRing_Email
+
     @Column({ name: 'EXTERNAL_PRIVATE_KEY', nullable: false })
     @DbString()
     externalPrivateKey?: KeyRing_ExternalPrivateKey
