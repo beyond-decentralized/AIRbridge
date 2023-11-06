@@ -55,7 +55,7 @@ const Layout: React.FC = () => {
                     <Route exact path="/rootRepositories">
                         <RootRepositoriesPage />
                     </Route>
-                    <Route exact path="/repository/:repositoryId">
+                    <Route exact path="/repository/:repositoryLid">
                         <RepositoryPage />
                     </Route>
                     <Route exact path="/applications">

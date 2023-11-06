@@ -30,18 +30,15 @@
     "@airport/taxiway": "workspace:../../AIRport/generators/taxiway",
     "rollup": "workspace:../../node_modules/rollup"
   },
-  "main": "dist/cjs/sso.index.js",
+  "main": "dist/esm/sso.index.js",
   "module": "dist/esm/sso.index.mjs",
-  "browser": "dist/esm/sso.index.mjs",
-  "app": "dist/app/bundle.mjs",
   "files": [
     "dist"
   ],
   "scripts": {
-    "build": "node generate.mjs && rollup -c ./rollup.config.mjs",
-    "clean-build": "node generate.mjs && rollup -c ./rollup.config.mjs --config-clean",
-    "dev": "node generate.mjs && rollup -c ./rollup.config.mjs -w",
-    "generate": "node generate.mjs"
+    "build": "rollup -c ./rollup.config.mjs",
+    "clean-build": "rollup -c ./rollup.config.mjs --config-clean",
+    "dev": "rollup -c ./rollup.config.mjs -w"
   },
   "types": "dist/esm/sso.index.d.ts"
 }

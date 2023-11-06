@@ -8,7 +8,7 @@ import './RepositoryPage.css';
 
 const RepositoryPage: React.FC = () => {
 
-  const { repositoryId } = useParams<{ repositoryId: string; }>();
+  const { repositoryLid } = useParams<{ repositoryLid: string; }>();
   const [repository, setRepository] = useState<IRepository>(() => null as any)
   const [present, dismiss] = useIonToast()
 
@@ -24,11 +24,11 @@ const RepositoryPage: React.FC = () => {
 
   useEffect(() => {
     getRepository(
-      repositoryId,
+      repositoryLid,
       setRepository,
       showToast
     ).then()
-  }, [repositoryId])
+  }, [repositoryLid])
 
   let repositoryFragment
   if (!repository) {
@@ -90,7 +90,7 @@ const RepositoryPage: React.FC = () => {
     repositoryFragment =
       <>
         <IonFab vertical="bottom" horizontal="end" slot="fixed">
-          <IonFabButton onClick={e => getRepository(repositoryId, setRepository, present)}>
+          <IonFabButton onClick={e => getRepository(repositoryLid, setRepository, present)}>
             <IonIcon icon={refresh} />
           </IonFabButton>
         </IonFab>

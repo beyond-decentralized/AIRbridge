@@ -124,12 +124,12 @@ export async function getRepositories(
 }
 
 export async function getRepository(
-    repositoryId: string,
+    repositoryLid: string,
     setRepository: (repository: IRepository) => void,
     showMessage: (message: string, duration: number) => void
 ) {
     try {
-        const repository = await airportApi.getRepository(repositoryId)
+        const repository = await airportApi.getRepository(repositoryLid)
         setRepository(repository)
     } catch (e) {
         console.error(e)

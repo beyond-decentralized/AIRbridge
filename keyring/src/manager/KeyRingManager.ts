@@ -23,7 +23,8 @@ export interface IKeyRingManager {
 
     addRepositoryKey(
         repositoryGUID: string,
-        repositoryName: string
+        repositoryName: string,
+        context: IContext
     ): Promise<RepositoryMember_PublicSigningKey>
 
 }
@@ -89,7 +90,8 @@ export class KeyRingManager
 
     async addRepositoryKey(
         repositoryGUID: string,
-        repositoryName: string
+        repositoryName: string,
+        context: IContext
     ): Promise<RepositoryMember_PublicSigningKey> {
         // const encryptionKey = await this.keyUtils.getEncryptionKey()
         const signingKey = await this.keyUtils.getSigningKey()
@@ -115,7 +117,7 @@ export class KeyRingManager
         keyRing.repositoryKeys.push(repositoryKey)
 
         repositoryKey.repository = keyRing.repository
-        await this.repositoryKeyDao.save(repositoryKey)
+        await this.repositoryKeyDao.save(repositoryKey, context)
 
         return memberPublicSigningKey
     }

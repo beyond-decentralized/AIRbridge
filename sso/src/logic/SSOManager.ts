@@ -1,12 +1,10 @@
-import { IKeyRing } from "@airbridge/data-model";
+import { IKeyRing, KeyRing_Email } from "@airbridge/data-model";
 import { IKeyRingManager } from "@airbridge/keyring/dist/app/bundle";
 import { IContext, Inject, Injected } from "@airport/direction-indicator";
 import { IKeyUtils } from "@airport/ground-control";
 import { IUserAccountInfo, IUserSession, TerminalStore, UserStore } from '@airport/terminal-map'
 import { IUserAccountManager, TerminalDao } from "@airport/travel-document-checkpoint/dist/app/bundle";
 import { ISignInAdapter } from "../signIn/SignInAdapter";
-import { UserAccount_Email } from "@airport/aviation-communication";
-import { Api } from "@airport/air-traffic-control";
 import { ActorDao } from "@airport/holding-pattern/dist/app/bundle";
 
 export interface ISSOManager {
@@ -50,7 +48,6 @@ export class SSOManager
     @Inject()
     userStore: UserStore
 
-    @Api()
     async signUp(
         userAccountInfo: IUserAccountInfo,
         context: IContext
@@ -72,9 +69,17 @@ export class SSOManager
 
         const signingKey = await this.keyUtils.getSigningKey(521)
 
+        const accountPublicSigningKey = signingKey.public
+        const username = userAccountInfo.username
+        const hashedObject = {
+            accountPublicSigningKey,
+            username
+        }
+        const sha1sum = await this.keyUtils.sha1(JSON.stringify(hashedObject))
+
         const { userAccount } = await this.userAccountManager
-            .addUserAccount(userAccountInfo.username,
-                signingKey.public, context)
+            .addUserAccount(username, accountPublicSigningKey,
+                sha1sum, context)
         session.userAccount = userAccount
         context.transaction.actor.userAccount = userAccount
         await this.actorDao.updateUserAccount(userAccount,
@@ -102,7 +107,6 @@ export class SSOManager
         })
     }
 
-    @Api()
     async login(
         userAccount: IUserAccountInfo
     ): Promise<void> {
@@ -110,9 +114,8 @@ export class SSOManager
         throw new Error(`Implement`);
     }
 
-    @Api()
     async signIn(
-        email: UserAccount_Email
+        email: KeyRing_Email
     ): Promise<IKeyRing> {
         throw new Error(`Implement`);
         // return await this.signInAdapter.getKeyRing({
