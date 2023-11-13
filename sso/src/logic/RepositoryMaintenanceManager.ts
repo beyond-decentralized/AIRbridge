@@ -95,6 +95,7 @@ export class RepositoryMaintenanceManager
         if (!acceptingRepositoryMember) {
             throw new Error(`User '${userAccount.username}' is not a member of Repository '${repository.name}'`)
         }
+        acceptingRepositoryMember.userAccount = userAccount
 
         const publicSigningKey = await this.keyRingManager.addRepositoryKey(
             repository.GUID,
