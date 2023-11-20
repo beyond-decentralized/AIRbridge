@@ -22,7 +22,9 @@ export class ApplicationsPage implements OnInit, OnDestroy {
     const applications$ = await this.stateService.getApplications()
     this.applicationsSubscription = applications$
       .subscribe(applications => {
-        this.applications.set(applications)
+        this.applications.set(applications.filter(application =>
+          !application.fullName.startsWith('airport____')
+          && !application.fullName.startsWith('airbridge____')))
       })
   }
 
