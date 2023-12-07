@@ -12,7 +12,7 @@ export class KeyRing
     // FIXME: make non-nullable once implemented
     @Column({ name: 'EMAIL' })
     @DbString()
-    email: KeyRing_Email
+    email: KeyRing_Email = null
 
     @Column({ name: 'EXTERNAL_PRIVATE_KEY', nullable: false })
     @DbString()

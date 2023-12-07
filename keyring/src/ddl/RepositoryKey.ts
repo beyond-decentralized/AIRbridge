@@ -12,7 +12,7 @@ export class RepositoryKey
 
     @Column({ name: 'ENCRYPTION_KEY' })
     @DbString()
-    encryptionKey: RepositoryKey_EncryptionKey
+    encryptionKey: RepositoryKey_EncryptionKey = null
 
     @Column({ name: 'REPOSITORY_GUID', nullable: false })
     @DbString()
