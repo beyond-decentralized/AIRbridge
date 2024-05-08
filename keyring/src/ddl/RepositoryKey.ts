@@ -1,6 +1,6 @@
 import { IRepositoryKey, RepositoryKey_EncryptionKey, RepositoryKey_PrivateSigningKey, RepositoryKey_PublicSigningKey } from "@airbridge/data-model";
 import { Repository_GUID, Repository_Name } from "@airport/ground-control";
-import { InternalAirEntity } from "@airport/holding-pattern/dist/app/bundle";
+import { InternalAirEntity } from "@airport/final-approach/dist/app/bundle";
 import { Column, DbString, Entity, ManyToOne, Table } from "@airport/tarmaq-entity";
 import { KeyRing } from "./KeyRing";
 

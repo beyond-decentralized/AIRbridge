@@ -1,5 +1,5 @@
 import { IKeyRing, KeyRing_Email, KeyRing_ExternalPrivateKey, KeyRing_InternalPrivateSigningKey } from "@airbridge/data-model";
-import { InternalAirEntity } from "@airport/holding-pattern/dist/app/bundle";
+import { InternalAirEntity } from "@airport/final-approach/dist/app/bundle";
 import { Column, DbString, Entity, OneToMany, Table } from "@airport/tarmaq-entity";
 import { RepositoryKey } from "./RepositoryKey";
 

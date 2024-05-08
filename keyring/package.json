@@ -12,6 +12,7 @@
     "@airport/airgate": "workspace:../../AIRport/libs/airgate",
     "@airport/autopilot": "workspace:../../AIRport/libs/autopilot",
     "@airport/direction-indicator": "workspace:../../AIRport/libs/direction-indicator",
+    "@airport/final-approach": "workspace:../../AIRport/schemas/final-approach",
     "@airport/ground-control": "workspace:../../AIRport/apis/ground-control",
     "@airport/holding-pattern": "workspace:../../AIRport/schemas/holding-pattern",
     "@airport/tarmaq-dao": "workspace:../../AIRport/ORMs/tarmaq/dao",
