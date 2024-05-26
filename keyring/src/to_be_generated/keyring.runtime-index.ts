@@ -6,6 +6,6 @@ export * from '../generated/qApplication'
 export * from '../generated/qInterfaces'
 export * from '../generated/vInterfaces'
 export * from '../manager/KeyRingManager'
-export * from '../manager/MessageSigningManager'
+export * from '../manager/BlockSigningManager'
 
 export * from './keyring.runtime-injection'
