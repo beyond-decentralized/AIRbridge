@@ -30,7 +30,7 @@
     "@airport/taxiway": "workspace:../../AIRport/generators/taxiway",
     "rollup": "workspace:../../node_modules/rollup"
   },
-  "main": "dist/esm/sso.index.js",
+  "main": "dist/cjs/sso.index.js",
   "module": "dist/esm/sso.index.mjs",
   "files": [
     "dist"

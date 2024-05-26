@@ -27,7 +27,7 @@
     "@airport/taxiway": "workspace:../../AIRport/generators/taxiway",
     "rollup": "workspace:../../node_modules/rollup"
   },
-  "main": "dist/esm/keyring.index.mjs",
+  "main": "dist/cjs/keyring.index.mjs",
   "module": "dist/esm/keyring.index.mjs",
   "browser": "dist/esm/keyring.index.mjs",
   "app": "dist/app/bundle.mjs",
