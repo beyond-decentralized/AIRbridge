@@ -52,7 +52,7 @@ export class SSOManager
         userAccountInfo: IUserAccountInfo,
         context: IContext
     ): Promise<void> {
-        if (this.terminalStore.getIsServer()) {
+        if (this.terminalStore.getIsSyncNode()) {
             throw new Error('Implement');
         }
 
