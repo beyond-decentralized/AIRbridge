@@ -9,17 +9,18 @@ import { IDvo } from '../definition/IDvo';
  * Data Validation object.
  */
 export class Dvo<Entity,
-  EntityVDescriptor>
-  implements IDvo<Entity, EntityVDescriptor> {
+  EntityVDescriptor,
+  QSchema extends QApp>
+  implements IDvo<Entity, EntityVDescriptor, QSchema> {
 
   protected dbEntity: DbEntity;
 
   constructor(
     dbEntityId: DbEntityId | DbEntity,
-    qApplication?: QApp,
+    public qSchema: QSchema,
   ) {
     if (typeof dbEntityId === 'number') {
-      this.dbEntity = qApplication.__dbApplication__.currentVersion[0]
+      this.dbEntity = qSchema.__dbApplication__.currentVersion[0]
         .applicationVersion.entities[dbEntityId];
     } else {
       this.dbEntity = dbEntityId;
